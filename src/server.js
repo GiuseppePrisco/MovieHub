@@ -12,19 +12,21 @@ require('dotenv').config();
 
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
-app.get('/login', function(req, res){
-  res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
-});
+var google_token = '';
+var code = '';
 
 // app.get('/login', function(req, res){
-//   res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
-// }); 
-  /* scope diverso ma anche con il calendar riesco a risalire ai dati quindi penso vada bene */
+//   res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
+// });
+
+app.get('/login', function(req, res){
+  res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
+}); 
 
 app.get('/googlecallback', function(req, res){
   if (req.query.code!=undefined){  
     res.redirect('gtoken?code='+req.query.code)
-    code = req.query.code;
+    code += req.query.code;
   }
   else{
     res.status(403).redirect(403, '/error?statusCode=403')
@@ -50,7 +52,7 @@ app.get('/gtoken', function(req, res){
       res.redirect(404, '/error?statusCode=404' );
     }
     else{
-      google_token = info.access_token;
+      google_token += info.access_token;
       console.log("Il token di google è: "+google_token);
 
       res.redirect('/registrazione'); 
@@ -240,6 +242,42 @@ app.post('/cercaTitolo',function(req,res){
 });
 
 /* **************************************** FINE TMDB ************************************************* */
+
+/* ************************************** NETFLIX TOP 10 ********************************************** */
+
+app.get('/topMovie', function(req, res){
+  const options = {
+    method: 'GET',
+    url: 'https://netflix-weekly-top-10.p.rapidapi.com/api/movie',
+    headers: {
+      'X-RapidAPI-Host': 'netflix-weekly-top-10.p.rapidapi.com',
+      'X-RapidAPI-Key': process.env.NETFLIX_KEY
+    }
+  };
+
+  request.get(options, function(error, response, body){
+    if (error){
+      console.log(error);
+    }
+    else{
+      var info = JSON.parse(body);
+      if (info.error!=undefined){
+        res.redirect(404, 'Errore');
+      }
+      else{
+        var output='1) '+info[0].name+'<br>';
+        for (var i=1; i<info.length; i++){
+          output+=i+1+') '+info[i].name+'</br>';
+        }
+        res.send(output);
+      }
+    }
+
+  });
+})
+
+
+/* ************************************ FINE NETFLIX TOP 10 ********************************************* */
 
 
 /* ********************************* DEFINIZIONE DELLA PORTA ****************************************** */
