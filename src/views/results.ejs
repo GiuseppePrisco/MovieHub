@@ -1,0 +1,21 @@
+<html>
+    <% if (info!=""){ %>
+<head>
+    <title>Risultati</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>
+</head>
+<body>
+    <script>
+    </script>
+    <h1>Ecco cosa abbiamo trovato</h1>
+    <% if(info.results.length>0){ %>
+        <ul>
+        <% for(var i=0;i < info.results.length; i++) {%>
+            <li> <%= info.results[i].original_title%> </li>
+        <%}%>
+        </ul>
+<%}}%>
+    

@@ -6,6 +6,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 var request = require('request');
 require('dotenv').config();
 
+
+app.set('view engine', 'ejs');
+app.set('views', __dirname+'/views');
 // DA COMPLETARE !!!! 
 
 /* ********************************* FINE DIPENDENZE ****************************************** */
@@ -167,10 +170,14 @@ app.get('/bot', function(req,res){  // ---> è solo una prova!!!
 
 /* *************************************** TMDB *********************************************** */
 
+app.get("/cercaTitolo", function(req,res){
+  res.render('prova')
+});
+
 // Primo esempio per fare la chiamata rest al TMDB --> database dei film
 app.post('/cercaTitolo',function(req,res){
   var titolo = req.body.search; // da mettere nell'html
-  var movie_id;
+  var movie_id="";
     
   // per ottenere l'id del film utile per la richiesta delle informazioni del film
 
@@ -186,9 +193,9 @@ app.post('/cercaTitolo',function(req,res){
       if (response.statusCode == 200) {
         var info = JSON.parse(body);
         if (info.results.length>0){
-          movie_id = info.results[0].id; // gestire il fatto che sia una lista di film 
-          console.log(movie_id);
-          res.send("Il film ha id: "+movie_id);
+          res.render("results", {info:info});
+        }
+      
           
           // altra chiamata REST per mostrare i dettagli del film --> bisogna farne altre per ottenere attori, ecc.
           // request.get('https://api.themoviedb.org/3/movie/'+movie_id+'?api_key='+process.env.FILM_KEY+'&language=it-IT', function(error, response, body){
@@ -207,7 +214,6 @@ app.post('/cercaTitolo',function(req,res){
           //     console.log(response.statusCode, body);
           //   }
           // });
-        }
         else{
           res.send("Il film cercato non esiste...");
         }
