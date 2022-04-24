@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="index.css">
+		<title>Chat Bot</title>
+	</head>
+	<body>
+		<div class="container">
+			<p class="msg">Chat-bot:</p>
+			<div id="messages" class="messages"></div>
+			<form id="msgForm" class="msgForm">
+				<input type="text" placeholder="Send message" class="input" id="inputBox"/>
+				<input type="submit" class="btn" value="Send">
+			</form>
+		</div>
+		<script type="text/javascript">
+			const ws=new WebSocket('ws://localhost:9998/');
+				ws.onopen = function(){
+                   // Web Socket is connected, send data using send()
+                   alert("Connessione avvenuta...");
+                };
+				
+				ws.onmessage = function(message){
+					const msgDiv=document.createElement('div');
+					msgDiv.classList.add('msgCtn1');
+					msgDiv.innerHTML = message.data;
+					document.getElementById('messages').appendChild(msgDiv);
+				}
+				const form=document.getElementById('msgForm');
+				form.addEventListener('submit',(event) => {
+					event.preventDefault();
+					const message=document.getElementById('inputBox').value;
+					const msgDiv=document.createElement('div');
+					msgDiv.classList.add('msgCtn2');
+					msgDiv.innerHTML = message;
+					document.getElementById('messages').appendChild(msgDiv);
+					ws.send(message);
+					document.getElementById('inputBox').value=''
+				})
+		</script>
+	</body>
+</html>
