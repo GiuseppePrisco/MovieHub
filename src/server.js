@@ -138,12 +138,6 @@ app.get('/bot', function(req,res){  // ---> è solo una prova!!!
               break;
             }
           }
-        }
-        else{
-          // ??? 
-        }
-    }
-  });
 
 
   option = {
