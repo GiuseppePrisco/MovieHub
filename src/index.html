@@ -10,7 +10,9 @@
 	<body>
 		<div class="container">
 			<p class="msg">Chat-bot:</p>
-			<div id="messages" class="messages"></div>
+			<div class="chat-box" id="chat-box">
+				<div id="messages" class="messages"></div>
+			</div>
 			<form id="msgForm" class="msgForm">
 				<input type="text" placeholder="Send message" class="input" id="inputBox"/>
 				<input type="submit" class="btn" value="Send">
@@ -20,7 +22,7 @@
 			const ws=new WebSocket('ws://localhost:9998/');
 				ws.onopen = function(){
                    // Web Socket is connected, send data using send()
-                   alert("Connessione avvenuta...");
+                   //alert("Connessione avvenuta...");
                 };
 				
 				ws.onmessage = function(message){
@@ -33,12 +35,15 @@
 				form.addEventListener('submit',(event) => {
 					event.preventDefault();
 					const message=document.getElementById('inputBox').value;
+					if (message==''){ 
+						return false; 
+					}
 					const msgDiv=document.createElement('div');
 					msgDiv.classList.add('msgCtn2');
 					msgDiv.innerHTML = message;
 					document.getElementById('messages').appendChild(msgDiv);
 					ws.send(message);
-					document.getElementById('inputBox').value=''
+					document.getElementById('inputBox').value='';
 				})
 		</script>
 	</body>

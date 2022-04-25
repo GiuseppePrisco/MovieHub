@@ -4,6 +4,7 @@ var fs = require('fs');
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 var request = require('request');
+const WebSocket = require('ws');
 require('dotenv').config();
 
 
@@ -12,6 +13,9 @@ app.set('views', __dirname+'/views');
 // DA COMPLETARE !!!! 
 
 /* ********************************* FINE DIPENDENZE ****************************************** */
+
+// Per chat-bot:
+const wss = new WebSocket.Server({port: 9998});
 
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
@@ -105,59 +109,69 @@ app.get('/registrazione', function(req, res){
 
 /* ******************************** FINE GOOGLE OAUTH ***************************************** */
 
-/* ****************************** FEEDBACK CON RABBIT MQ ************************************** */
-
-
-
-/* ********************************** FINE FEEDBACK ******************************************* */
-
 /* ************************************* CHAT BOT ********************************************* */
 
-// potremmo usare un API per la chat bot(ex. https://docs.nativechat.com/docs/1.0/publishing/rest.html)
-// fare con tecnologia asincrona la pubblicazione di un commento su un certo film sul proprio profilo
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(data) {
+    if (data == 'Stop'){
+      ws.send('Ciao e buona visione!');
+      ws.close();
+    }
+    else{
+      var lista;
+      var genere_id;
+      var suggerito;
 
-app.get('/bot', function(req,res){  // ---> è solo una prova!!!
-  //var genere = //da inserire; --> è un nome associato a una parola chiave es. felicità --> commedia 
-  var lista;
-  var gid;
-  var suggerito;
+      var option = {
+        url: 'https://api.themoviedb.org/3/genre/movie/list?api_key='+process.env.FILM_KEY+'&language=it-IT', 
+      }
+      
+      request.get(option,function(error, response, body){
+        if(error) {
+          console.log(error);
+        } else {
+          if (response.statusCode == 200) {
+            lista = JSON.parse(body).genres;
+            var trovato=0;
+            // cerco l'id del genere per le richiesta successiva
+            for (var i=0; i<lista.length; i++){
+              if (data == lista[i].name){
+                trovato=1;
+                genere_id=lista[i].id
+                break;
+              }
+            }
 
-  var option = {
-    url: 'https://api.themoviedb.org/3/genre/movie/list?api_key='+process.env.FILM_KEY+'&language=it-IT', 
-  }
+            // Se il dato inserito non è corretto 
+            if (!trovato){
+              ws.send('Genere non trovato, mi dispiace :-(');
+            }
 
-  request.get(option,function(error, response, body){
-    if(error) {
-      console.log(error);
-    } else {
-        if (response.statusCode == 200) {
-          lista = JSON.parse(body).genres;
-          for (var i=0; i<lista.length; i++){
-            if (genere == lista[i].name){
-              gid=lista[i].id
-              break;
+            else{
+              // richiesta del film secondo dall'id del genere
+              option = {
+                url: 'https://api.themoviedb.org/3/discover/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&sort_by=popularity.desc&with_genres='+genere_id, // rendere segreta la chiave 
+              }
+      
+              request.get(option,function(error, response, body){
+                if(error) {
+                  console.log(error);
+                } else {
+                  if (response.statusCode == 200) {
+                    var info = JSON.parse(body);
+                    suggerito = info.results[0].title;
+                    ws.send("Ti suggerisco di guardare: "+suggerito);
+                  }
+                }
+              });
             }
           }
-
-
-  option = {
-    url: 'https://api.themoviedb.org/3/discover/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&sort_by=popularity.desc&with_genres='+gid, // rendere segreta la chiave 
-  }
-
-  request.get(option,function(error, response, body){
-    if(error) {
-      console.log(error);
-    } else {
-        if (response.statusCode == 200) {
-          var info = JSON.parse(body);
-          suggerito = info.results[0].title;
-          res.send("Ti consiglio di guardare il film: <br>"+suggerito+"</br>");
         }
-        else{
-          // ??? 
-        }
+      });
     }
   });
+  // Messaggio di benvenuto
+  ws.send('Ciao! Inserisci un genere che ti consiglio un film da cercare, "Stop" per terminare :-)');
 });
 
 /* *********************************** FINE CHAT BOT ******************************************* */
