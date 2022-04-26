@@ -113,7 +113,11 @@ app.get('/registrazione', function(req, res){
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
-    if (data == 'Stop'){
+    //rendo la prima lettera maiuscola e le altre minuscole
+    var mes=data.toString();
+    mes=mes[0].toUpperCase()+mes.slice(1).toLowerCase();
+
+    if (mes == 'Stop'){
       ws.send('Ciao e buona visione!');
       ws.close();
     }
@@ -135,7 +139,7 @@ wss.on('connection', function connection(ws) {
             var trovato=0;
             // cerco l'id del genere per le richiesta successiva
             for (var i=0; i<lista.length; i++){
-              if (data == lista[i].name){
+              if (mes == lista[i].name){
                 trovato=1;
                 genere_id=lista[i].id
                 break;
