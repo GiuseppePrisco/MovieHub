@@ -33,7 +33,7 @@ app.get('/login', function(req, res){
 app.get('/googlecallback', function(req, res){
   if (req.query.code!=undefined){  
     res.redirect('gtoken?code='+req.query.code)
-    code += req.query.code;
+    code = req.query.code;
   }
   else{
     res.status(403).redirect(403, '/error?statusCode=403')
@@ -56,10 +56,10 @@ app.get('/gtoken', function(req, res){
     }
     var info = JSON.parse(body);
     if(info.error != undefined){
-      res.redirect(404, '/error?statusCode=404' );
+      res.send(info.error);
     }
     else{
-      google_token += info.access_token;
+      google_token = info.access_token;
       console.log("Il token di google è: "+google_token);
 
       res.redirect('/registrazione'); 
@@ -94,18 +94,64 @@ app.get('/registrazione', function(req, res){
       */
 
     if(info.error != undefined){
-      res.redirect(404, '/error?statusCode=404');
+      res.send(info.error);
     }
     else{
-      res.send("Nome: "+info.name);
-
-      // Inserire nel database questo account attraverso l'id, controllando che non sia già presente 
+      // Inserire nel database questo account attraverso l'id, controllando che non sia già presente
+      var id = info.id;
+      request({
+        url: 'http://admin:admin@127.0.0.1:5984/users/_all_docs',
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json'
+        },
+      }, function(error, response, body){
+          if(error) {
+            console.log(error);
+          } else {
+            var data = JSON.parse(body); 
+            for(var i=0; i<data.total_rows;i++){
+              // se questo account google è già registrato torno alla home, altrimenti lo inserisco nel db e torno alla home
+              if(data.rows[i].id === id){  
+                res.send("Esiste");
+                //res.redirect('/home'); // settare il fatto che l'utente è connesso!
+                return;
+              }
+            }
+            var body1 = {
+              "id": info.id,
+              "name": info.name,
+              "given_name": info.given_name,
+              "family_name": info.family_name,
+              "picture": info.picture,
+              "gender": info.gender,
+              "locale": info.locale,
+              "my_list": []
+            }
+            request({
+              url: 'http://admin:admin@127.0.0.1:5984/users/'+id,
+              method: 'PUT',
+              headers: {
+                'content-type': 'application/json'
+              },
+              body: JSON.stringify(body1)
+            }, function(error, response, body){
+              if (error){
+                console.log(error);
+              }
+              else{
+                console.log("Registrazione di "+id+", "+info.name+" avvenuta");
+                res.send("Nuovo");
+                //res.redirect('/home');
+              }
+            });
+          }
+        }
+      );
     }
-        
   });
 });
 
-  // fare la creazione dell'account con google (da salvare su couchdb)
 
 /* ******************************** FINE GOOGLE OAUTH ***************************************** */
 
