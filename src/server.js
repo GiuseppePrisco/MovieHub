@@ -100,6 +100,7 @@ app.get('/registrazione', function(req, res){
       // Inserire nel database questo account attraverso l'id, controllando che non sia già presente
       var id = info.id;
       request({
+        //url: 'http://admin:admin@couchdb:5984/users/_all_docs',
         url: 'http://admin:admin@127.0.0.1:5984/users/_all_docs',
         method: 'GET',
         headers: {
@@ -129,6 +130,7 @@ app.get('/registrazione', function(req, res){
               "my_list": []
             }
             request({
+              //url: 'http://admin:admin@couchdb:5984/users/'+id,
               url: 'http://admin:admin@127.0.0.1:5984/users/'+id,
               method: 'PUT',
               headers: {
