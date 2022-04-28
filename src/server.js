@@ -100,6 +100,7 @@ app.get('/registrazione', function(req, res){
       // Inserire nel database questo account attraverso l'id, controllando che non sia già presente
       var id = info.id;
       request({
+        //url: 'http://admin:admin@couchdb:5984/users/_all_docs',
         url: 'http://admin:admin@127.0.0.1:5984/users/_all_docs',
         method: 'GET',
         headers: {
@@ -129,6 +130,7 @@ app.get('/registrazione', function(req, res){
               "my_list": []
             }
             request({
+              //url: 'http://admin:admin@couchdb:5984/users/'+id,
               url: 'http://admin:admin@127.0.0.1:5984/users/'+id,
               method: 'PUT',
               headers: {
@@ -230,6 +232,88 @@ wss.on('connection', function connection(ws) {
 /* *********************************** FINE CHAT BOT ******************************************* */
 
 /* *************************************** TMDB *********************************************** */
+
+//inizio aggiunta delle pagine di ricerca e registrazione, il resto non è stato modificato
+// le pagine relative alla registrazione vanno riviste e integrate con oauth e di conseguenza
+//non rimarranno in questa sezione relativa a tmdb
+
+app.get('/', function(req, res) {
+  res.render('index');
+});
+
+app.get('/registration', function(req, res) {
+  res.render('registration');
+});
+
+app.post('/registration', function(req, res) {
+  var name = req.body.name;
+  var surname = req.body.surname;
+  var email = req.body.email;
+  var password = req.body.password;
+  console.log("nome: "+name+", cognome: "+surname+", email: "+email+", password: "+password);
+  res.render('homepage');
+});
+
+//fine pagine sulla registrazione
+
+/*
+app.get("/homepage", function(req,res){
+  res.render('homepage')
+});
+*/
+
+app.post('/results_film', function(req, res) {
+  var titolo = req.body.search; 
+    
+  var option = {
+    url: 'https://api.themoviedb.org/3/search/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&query='+titolo, 
+  }
+    
+  request.get(option,function(error, response, body){
+    if(error) {
+      console.log(error);
+    } 
+    else {
+      if (response.statusCode == 200) {
+        var info = JSON.parse(body);
+        if (info.results.length>0){
+          res.render("results_film", {info:info});   
+        }
+        else{
+          res.send("Il film cercato non esiste...");
+        }
+      }
+    }
+  });
+});
+
+
+app.post('/results_title', function(req, res) {
+  var movie_id = req.body.movie_id;
+    
+  var option = {
+    url: 'https://api.themoviedb.org/3/movie/'+movie_id+'?api_key='+process.env.FILM_KEY+'&language=en-US',
+  }
+    
+  request.get(option,function(error, response, body){
+    if(error) {
+      console.log(error);
+    } 
+    else {
+      if (response.statusCode == 200) {
+        var info = JSON.parse(body);
+        if (info!=undefined){
+          res.render("results_title", {info:info});   
+        }
+        else{
+          res.send("Il film cercato non esiste...");
+        }
+      }
+    }
+  });
+});
+
+//fine aggiunta delle pagine di ricerca, il resto non è stato modificato
 
 app.get("/cercaTitolo", function(req,res){
   res.render('prova')
