@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<% if (info!=""){ %>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Film</title>
+</head>
+<body>
+    <h1>Ecco i dati relativi al tuo film:</h1>
+    <table>
+        <tr>
+            <td>
+                id: <%= info.id%> 
+            </td>
+        </tr>
+        <tr>
+            <td>
+                nome: <%= info.original_title%> 
+            </td>
+        </tr>
+        <tr>
+            <td>
+                popolarità: <%= info.popularity%> 
+            </td>
+        </tr>
+        <tr>
+            <td>
+                data di uscita: <%= info.release_date%> 
+            </td>
+        </tr>
+        <tr>
+            <td>
+                status: <%= info.status%> 
+            </td>
+        </tr>
+        <tr>
+            <td>
+                generi:
+            </td>
+        </tr>
+            <ul>
+                <% for(var i=0;i < info.genres.length; i++) {%>
+                    <tr>
+                    <td>
+                    <li><%= info.genres[i].id%>: <%= info.genres[i].name%></li>  
+                    </td>
+                    </tr>
+                <%}%>
+            </ul>
+    </table>
+
+<%}%>
+</body>
+</html>
