@@ -152,6 +152,9 @@ app.get('/registrazione', function(req, res){
   });
 });
 
+app.get('/delete_account', function(req, res){
+  
+});
 
 /* ******************************** FINE GOOGLE OAUTH ***************************************** */
 
