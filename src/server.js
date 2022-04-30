@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
 app.use(bodyParser.urlencoded({ extended: false }));
 var request = require('request');
 const WebSocket = require('ws');
@@ -10,6 +12,24 @@ require('dotenv').config();
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname+'/views');
+
+// Gestione della sessione
+app.use(cookieParser()); 
+
+app.use(expressSession({
+  secret: 'MovieHub',
+  resave: false,
+  saveUninitialized: false
+  // Ha valore cookie di default: { path: '/', httpOnly: true, secure: false, maxAge: null }
+  // se usiamo https dobbiamo decommentare: 
+  // cookie: { secure: true }
+}));
+
+app.use(function(req,res,next) {  
+  res.locals.session = req.session;  
+  next();   
+}); 
+
 // DA COMPLETARE !!!! 
 
 /* ********************************* FINE DIPENDENZE ****************************************** */
@@ -19,8 +39,8 @@ const wss = new WebSocket.Server({port: 9998});
 
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
-var google_token = '';
-var code = '';
+// var google_token = '';
+// var code = '';
 
 // app.get('/login', function(req, res){
 //   res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
@@ -33,17 +53,17 @@ app.get('/login', function(req, res){
 app.get('/googlecallback', function(req, res){
   if (req.query.code!=undefined){  
     res.redirect('gtoken?code='+req.query.code)
-    code = req.query.code;
+    var code = req.query.code;
   }
   else{
-    res.status(403).redirect(403, '/error?statusCode=403')
+    res.send('Errore durante la richiesta del code di Google'); // da cambiare
   }
 });
 
 app.get('/gtoken', function(req, res){
   var url = 'https://www.googleapis.com/oauth2/v3/token';
   var formData = {
-    code: code,
+    code: req.query.code,
     client_id: process.env.G_CLIENT_ID,
     client_secret: process.env.G_CLIENT_SECRET,
     redirect_uri: "http://localhost:3000/googlecallback",
@@ -59,9 +79,8 @@ app.get('/gtoken', function(req, res){
       res.send(info.error);
     }
     else{
-      google_token = info.access_token;
-      console.log("Il token di google è: "+google_token);
-
+      req.session.google_token = info.access_token;
+      console.log("Il token di google è: "+req.session.google_token);
       res.redirect('/registrazione'); 
     }
   });
@@ -69,7 +88,13 @@ app.get('/gtoken', function(req, res){
 });
 
 app.get('/registrazione', function(req, res){
+
+  if(req.session.google_token==undefined){ 
+    //siamo qui solo se dalla barra si digita /registrazione
+    return res.send("ERRORE!"); // invece di questo redirect a una pagina d'errore
+  }
   
+  var google_token = req.session.google_token;
   var url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token='+google_token;
   var headers = {'Authorization': 'Bearer '+google_token};
 
@@ -100,8 +125,7 @@ app.get('/registrazione', function(req, res){
       // Inserire nel database questo account attraverso l'id, controllando che non sia già presente
       var id = info.id;
       request({
-        //url: 'http://admin:admin@couchdb:5984/users/_all_docs',
-        url: 'http://admin:admin@127.0.0.1:5984/users/_all_docs',
+        url: 'http://admin:admin@couchdb:5984/users/_all_docs',
         method: 'GET',
         headers: {
           'content-type': 'application/json'
@@ -114,6 +138,7 @@ app.get('/registrazione', function(req, res){
             for(var i=0; i<data.total_rows;i++){
               // se questo account google è già registrato torno alla home, altrimenti lo inserisco nel db e torno alla home
               if(data.rows[i].id === id){  
+                req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
                 res.send("Esiste");
                 //res.redirect('/home'); // settare il fatto che l'utente è connesso!
                 return;
@@ -130,8 +155,7 @@ app.get('/registrazione', function(req, res){
               "my_list": []
             }
             request({
-              //url: 'http://admin:admin@couchdb:5984/users/'+id,
-              url: 'http://admin:admin@127.0.0.1:5984/users/'+id,
+              url: 'http://admin:admin@couchdb:5984/users/'+id,
               method: 'PUT',
               headers: {
                 'content-type': 'application/json'
@@ -143,6 +167,7 @@ app.get('/registrazione', function(req, res){
               }
               else{
                 console.log("Registrazione di "+id+", "+info.name+" avvenuta");
+                req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
                 res.send("Nuovo");
                 //res.redirect('/home');
               }
@@ -155,10 +180,64 @@ app.get('/registrazione', function(req, res){
 });
 
 app.get('/delete_account', function(req, res){
-  
+  if (req.session.utente!=undefined){
+    request({
+      url: 'http://admin:admin@couchdb:5984/users/'+req.session.utente,
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      },
+    }, function(error, response, body){
+      if (error){
+        console.log(error);
+      }
+      else{
+        req.session.destroy();
+        res.send("Utente cancellato");
+      }
+    });
+  }
 });
 
+
 /* ******************************** FINE GOOGLE OAUTH ***************************************** */
+
+/* ************************************** PROFILO ********************************************* */
+
+app.get('/profilo', function(req, res){
+  if (req.session.utente!=undefined){
+    request({
+      url: 'http://admin:admin@couchdb:5984/users/'+req.session.utente,
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      },
+    }, function(error, response, body){
+      if (error){
+        console.log(error);
+      }
+      else{
+        info = JSON.parse(body);
+        res.send(info);
+      }
+    });
+  }
+  else{
+    res.redirect('/login');
+  }
+});
+
+app.get('/logout', function(req, res){
+  if (req.session.utente!=undefined){
+    req.session.destroy();
+    res.redirect('/home');
+  }
+  else{
+    res.send("Errore: non hai ancora effettuato il login");
+  }
+});
+
+/* *********************************** FINE PROFILO ******************************************* */
 
 /* ************************************* CHAT BOT ********************************************* */
 
