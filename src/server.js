@@ -39,9 +39,6 @@ const wss = new WebSocket.Server({port: 9998});
 
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
-// var google_token = '';
-// var code = '';
-
 // app.get('/login', function(req, res){
 //   res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
 // });
@@ -53,7 +50,6 @@ app.get('/login', function(req, res){
 app.get('/googlecallback', function(req, res){
   if (req.query.code!=undefined){  
     res.redirect('gtoken?code='+req.query.code)
-    var code = req.query.code;
   }
   else{
     res.send('Errore durante la richiesta del code di Google'); // da cambiare
