@@ -39,12 +39,8 @@ const wss = new WebSocket.Server({port: 9998});
 
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
-// app.get('/login', function(req, res){
-//   res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
-// });
-
 app.get('/login', function(req, res){
-  res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
+  res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
 }); 
 
 app.get('/googlecallback', function(req, res){
@@ -231,6 +227,26 @@ app.get('/logout', function(req, res){
   else{
     res.send("Errore: non hai ancora effettuato il login");
   }
+});
+
+app.get('/calendario', function(req,res){
+  if(req.session.google_token==undefined){ 
+    //siamo qui solo se dalla barra si digita /registrazione
+    return res.send("ERRORE!"); // invece di questo redirect a una pagina d'errore
+  }
+  
+  var google_token = req.session.google_token;
+  var url = 'https://www.googleapis.com/calendar/v3/users/me/calendarList';
+  var headers = {'Authorization': 'Bearer '+google_token};
+
+  request.get( {headers: headers, url: url}, function(error, response, body){
+    if (error){
+      console.log(error);
+    }
+    var info = JSON.parse(body);
+    console.log(info);
+    res.send(info);
+  });
 });
 
 /* *********************************** FINE PROFILO ******************************************* */
