@@ -13,6 +13,8 @@ require('dotenv').config();
 app.set('view engine', 'ejs');
 app.set('views', __dirname+'/views');
 
+const port = 3000;
+
 // Gestione della sessione
 app.use(cookieParser()); 
 
@@ -193,6 +195,86 @@ app.get('/delete_account', function(req, res){
 
 
 /* ******************************** FINE GOOGLE OAUTH ***************************************** */
+
+/* ********************************  GOOGLE CALENDAR ***************************************** */
+https://www.googleapis.com/calendar/v3
+app.get('/calendar', function(req, res){
+  if (req.session.google_token!=undefined){
+    res.send("<br><br><button onclick='window.location.href=\"/add_calendar\"'>Add a new calendar</button>"+
+            "<br><br><button onclick='window.location.href=\"/get_calendar\"'>Get calendar</button>"+
+            "<br><br><button onclick='window.location.href=\"/delete_calendar\"'>Delete the calendar</button>");
+  }
+});
+
+app.get('/add_calendar', function(req, res){
+  var options = {
+    url: 'https://www.googleapis.com/calendar/v3/calendars',
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer '+req.session.google_token
+    },
+    body: '{"summary": "Movie Calendar"}'
+  };
+  request(options, function callback(error, response, body) {
+  if (!error && response.statusCode == 200) {
+    var info = JSON.parse(body);
+    console.log(info);
+    req.session.calendar_id = info.id;
+    console.log(req.session.calendar_id);
+    res.redirect('/calendar');
+    }
+  else {
+    console.log(error);
+  }
+  });
+
+});
+
+app.get('/get_calendar', function(req, res){
+  var options = {
+    url: 'https://www.googleapis.com/calendar/v3/calendars/'+req.session.calendar_id,
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer '+req.session.google_token
+    }
+  };
+  request(options, function callback(error, response, body) {
+  if (!error && response.statusCode == 200) {
+    var info = JSON.parse(body);
+    console.log(info);
+    res.redirect('/calendar');
+    }
+  else {
+    console.log(error);
+  }
+  });
+
+});
+
+app.get('/delete_calendar', function(req, res){
+  var options = {
+    url: 'https://www.googleapis.com/calendar/v3/calendars/'+req.session.calendar_id,
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer '+req.session.google_token
+    }
+  };
+  request(options, function callback(error, response, body) {
+  if (!error) {
+    console.log("Eliminato");
+    res.redirect('/calendar');
+    }
+  else {
+    console.log(error);
+  }
+  });
+
+});
+
+
+
+
+/* ******************************** FINE GOOGLE CALENDAR ***************************************** */
 
 /* ************************************** PROFILO ********************************************* */
 
@@ -524,4 +606,4 @@ app.get('/topMovie', function(req, res){
 
 /* ********************************* DEFINIZIONE DELLA PORTA ****************************************** */
 
-app.listen(3000);
+app.listen(port);
