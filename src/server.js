@@ -202,7 +202,8 @@ app.get('/calendar', function(req, res){
   if (req.session.google_token!=undefined){
     res.send("<br><br><button onclick='window.location.href=\"/add_calendar\"'>Add a new calendar</button>"+
             "<br><br><button onclick='window.location.href=\"/get_calendar\"'>Get calendar</button>"+
-            "<br><br><button onclick='window.location.href=\"/delete_calendar\"'>Delete the calendar</button>");
+            "<br><br><button onclick='window.location.href=\"/delete_calendar\"'>Delete the calendar</button>"+
+            "<br><br><button onclick='window.location.href=\"/add_event\"'>Add an event to the calendar</button>");
   }
 });
 
@@ -269,6 +270,54 @@ app.get('/delete_calendar', function(req, res){
   }
   });
 
+});
+
+app.get('/add_event', function(req, res) {
+  res.render('add_event');
+});
+
+app.post('/add_event', function(req, res) {
+
+  var summary = req.body.summary;
+  var description = req.body.description;
+  var start_date = req.body.start_date;
+  var end_date = req.body.end_date;
+  var color = req.body.color;
+  console.log(start_date);
+  console.log(color);
+  var body1 = { 
+    "summary": summary,
+    "description": description,
+    "end": {
+      "date": end_date,
+      "timeZone": "Europe/Zurich"
+    },
+    "start": {
+      "date": start_date,
+      "timeZone": "Europe/Zurich"
+    },
+    "colorId": color
+  };
+ 
+  request({
+    url: 'https://www.googleapis.com/calendar/v3/calendars/'+req.session.calendar_id+'/events',
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': 'Bearer '+req.session.google_token
+    },
+    body: JSON.stringify(body1)
+  }, function callback(error, response, body) {
+    if (!error) {
+      var info = JSON.parse(body);
+      console.log(info);
+      console.log("creato evento");
+      res.redirect('/calendar');
+      }
+    else {
+      console.log(error);
+    }
+    });
 });
 
 
