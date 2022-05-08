@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var bodyParser = require("body-parser");
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 app.use(bodyParser.urlencoded({ extended: false }));
 var request = require('request');
@@ -16,12 +16,13 @@ app.set('views', __dirname+'/views');
 const port = 3000;
 
 // Gestione della sessione
-app.use(cookieParser()); 
+//app.use(cookieParser()); 
 
 app.use(expressSession({
   secret: 'MovieHub',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { maxAge: 24 * 60 * 60 * 1000 } // durata di 24 ore
   // Ha valore cookie di default: { path: '/', httpOnly: true, secure: false, maxAge: null }
   // se usiamo https dobbiamo decommentare: 
   // cookie: { secure: true }
@@ -42,7 +43,12 @@ const wss = new WebSocket.Server({port: 9998});
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
 app.get('/login', function(req, res){
-  res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
+  if (req.session.google_token!=undefined){ //se un utente si è già connesso 
+    res.send("Sei già connesso!");
+  }
+  else{
+    res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
+  }
 }); 
 
 app.get('/googlecallback', function(req, res){
