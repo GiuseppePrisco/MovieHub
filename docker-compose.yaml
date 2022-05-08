@@ -36,30 +36,17 @@ services:
             - "3000:3000"
         depends_on:
             - couchdb
-            # - rabbitmq
         links:
             - couchdb  
-          #  - rabbitmq
         volumes:
             - ./src:/src/
         networks:
             - app-network
         restart: on-failure
-#    rabbitmq:
- #       image: rabbitmq
-  #      volumes:
-   #         - ./rabbitmq-data:/var/lib/rabbitmq
-    #        - ./rabbitmq-data/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-     #   ports:
-      #      - "5672:5672"
-       # networks:
-        #    - app-network
-#        restart: always
 
 
 volumes:
     couchdb-data:
-#    rabbitmq-data:
 
 
 networks:

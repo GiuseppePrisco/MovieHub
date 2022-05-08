@@ -29,7 +29,7 @@ app.use(expressSession({
 }));
 
 app.use(function(req,res,next) {  
-  res.locals.session = req.session;  
+  res.locals.session = req.session;
   next();   
 }); 
 
@@ -43,7 +43,7 @@ const wss = new WebSocket.Server({port: 9998});
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
 app.get('/login', function(req, res){
-  if (req.session.google_token!=undefined){ //se un utente si è già connesso 
+  if (req.session.utente!=undefined){ //se un utente si è già connesso 
     res.send("Sei già connesso!");
   }
   else{
