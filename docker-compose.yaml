@@ -34,6 +34,7 @@ services:
             context: ./src
         ports:
             - "3000:3000"
+            - "9998:9998"
         depends_on:
             - couchdb
         links:
