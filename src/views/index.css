@@ -4,11 +4,14 @@ body {
     margin: 0%;
     overflow-x: hidden;
 
+    font-family: "Avenir", "Open Sans", sans-serif;
+
     background-image: url('sfondo.jpeg');
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: 100% 100%;
+
 }
 
 .soft-shadow {
@@ -17,14 +20,21 @@ body {
 
 .my-navbar {
     overflow: hidden;
-    background-color: red;
+    background-color: rgb(124, 0, 0);
+    padding: 20px;
     position: fixed;
     top: 0px;
     width: 100%;
-    font-size: 30px;
+    /* font-size: 30px; */
     z-index: 1;
     display:flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+}
+
+.my-navbar-menù{
+    margin-right: 15px;
+    position: fixed;
+    right: 0;
 }
 
 .my-navbar a {
@@ -39,6 +49,7 @@ body {
 .my-navbar a:hover {
   background: #ddd;
   color: black;
+  border-radius: 10px;
 }
 
 .main {
@@ -46,12 +57,14 @@ body {
     margin-bottom: 120px;
     display: flex;
     justify-content: center;
+    border-radius: 30px;
 }
 
 .main-box {
     top: 0px;
     width: 80%;
-    background-color: lightgray;
+    background-color: rgb(255, 255, 255);
+    opacity: 0.98;
     border-radius: 30px;
     padding: 20px;
     text-align: center;
@@ -65,11 +78,14 @@ body {
     padding: 10px;
     border-radius: 10px;
     font-size: 20px;
-    background-color: red;
-    border-color: darkred;   
+    background-color: darkred;
+    /* background-color: red; */
+    /* border-color: darkred;    */
 }
 
 .search-button:hover {  
-    background-color: darkred;
-    border-color: red;   
+    background-color: rgb(227, 72, 72);
+    /* background-color: darkred; */
+    /* border-color: red;    */
 }
+

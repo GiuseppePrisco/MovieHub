@@ -10,9 +10,12 @@
 </head>
 <body>
     <div class="my-navbar">
-        <a href="/">Home</a>
-        <a href="contact">Contact</a> <!-- da modificare -->
-        <a href="login">Login</a>
+        <h3><font color="white">MovieHub</font></h3>
+        <div class="my-navbar-menù">
+            <a href="/">Home</a>
+            <a href="top10">Netflix Top 10</a> 
+            <a href="login">Login</a>  <!--deve essere un button -->
+        </div>
     </div>
 
     <div class="main">
@@ -21,7 +24,7 @@
             <br>
             <h1>Qui trovi le informazioni di tutti i film che vuoi!</h1>
             <br>
-            <br>
+            <!-- <br> -->
             <form id='search' class="md" action="http://localhost:3000/results_film" method="POST">
                      
             <div class="container">
@@ -43,20 +46,20 @@
                     </div>
                 </div>
             </div>
-            <br>
+            <!-- <br> -->
             <div class="col-12">
-                <button class="search-button" type="submit">Cerca</button>
+                <button class="search-button" type="submit"><font color="white">Cerca</font></button>
             </div>
             </form>
             
-            <br>
+            <!-- <br> -->
             <br>
             <br>
             <br>
             <h3>Accedi per iniziare</h3>
             <br>
             <a href='login'>
-                <button class="search-button">Login</button>
+                <button class="search-button"><font color="white">Login</font></button>
             </a>
             <br>
             <br>
@@ -65,7 +68,7 @@
             <h3>Scopri i titoli del momento <br>su Netflix</h3>
             <br>
             <a href='topMovie'>
-                <button class="search-button">Top 10</button>
+                <button class="search-button"><font color="white">Top 10</font></button>
             </a>
             <br>
             <br>
