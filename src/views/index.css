@@ -1,0 +1,75 @@
+
+
+body {
+    margin: 0%;
+    overflow-x: hidden;
+
+    background-image: url('sfondo.jpeg');
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.soft-shadow {
+	filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.5));
+}
+
+.my-navbar {
+    overflow: hidden;
+    background-color: red;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    font-size: 30px;
+    z-index: 1;
+    display:flex;
+    justify-content: space-between;
+}
+
+.my-navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.my-navbar a:hover {
+  background: #ddd;
+  color: black;
+}
+
+.main {
+    margin-top: 120px; /* Add a top margin to avoid content overlay */
+    margin-bottom: 120px;
+    display: flex;
+    justify-content: center;
+}
+
+.main-box {
+    top: 0px;
+    width: 80%;
+    background-color: lightgray;
+    border-radius: 30px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.search-button {
+    min-width: 100px;
+    width: 10%;
+    margin-top: 0;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    background-color: red;
+    border-color: darkred;   
+}
+
+.search-button:hover {  
+    background-color: darkred;
+    border-color: red;   
+}
