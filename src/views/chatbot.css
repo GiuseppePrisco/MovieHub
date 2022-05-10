@@ -14,8 +14,7 @@ body{
 	flex-direction:column;
 	width: 30%;
 	height: 70vh;
-	z-index: 10;
-	
+	z-index: 10;	
 }
 .chat-box{
 	height: 370px;

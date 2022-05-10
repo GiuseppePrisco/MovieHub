@@ -1,0 +1,28 @@
+body{
+	margin:0;
+	padding: 0;
+	display:block;
+	justify-content:center;
+	font-family: "Avenir", "Open Sans", sans-serif;
+}
+.menu-container{
+	position: fixed;
+    width: 100vw;
+    top: 0;
+    padding: 20px;
+	z-index: 2;	
+    background-color: rgb(124, 0, 0);
+}
+.central-container{
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    top: 120px;
+    bottom: 120px;
+    width: 80vw;
+    height: 70vh;
+    margin: 0 auto;
+    text-align: center;
+    opacity: 0.9;
+    
+}
+
