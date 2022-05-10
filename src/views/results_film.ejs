@@ -11,18 +11,14 @@
 <body>
    
     <h1>Ecco cosa abbiamo trovato</h1>
-    <form action="http://localhost:3000/results_title" method="POST">
     <% if(info.results.length>0){ %>
         <ul>
         <% for(var i=0;i < info.results.length; i++) {%>
-            <li><%= info.results[i].original_title%> 
-            <input type="radio" name="movie_id" value=<%= info.results[i].id%>>
+            <li><a href="http://localhost:3000/results_title?id=<%= info.results[i].id%>" style='text-decoration: none;'> <%= info.results[i].original_title%></a>
             </li>
         <%}%>
         </ul>
     <%}%>
-        <button type="submit">Invia</button> 
-    </form>
 <%}%>
 </body>
 </html>    
