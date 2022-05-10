@@ -1,0 +1,123 @@
+
+
+body {
+    margin: 0%;
+    overflow-x: hidden;
+
+    background-image: url('sfondo.jpeg');
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.soft-shadow {
+	filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.5));
+}
+
+.my-navbar {
+    overflow: hidden;
+    background-color: red;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    font-size: 30px;
+    z-index: 1;
+    display:flex;
+    justify-content: space-between;
+}
+
+.my-navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.my-navbar a:hover {
+  background: #ddd;
+  color: black;
+}
+
+.main {
+    margin-top: 120px; /* Add a top margin to avoid content overlay */
+    margin-bottom: 120px;
+    display: flex;
+    justify-content: center;
+}
+
+.main-box {
+    top: 0px;
+    width: 80%;
+    height: fit-content;
+    background-color: lightgray;
+    border-radius: 30px;
+    padding: 20px;
+    text-align: center;
+    
+
+}
+
+.film-box {
+    width: 100%;
+    /* border: solid yellow 1px; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: space-around;
+}
+
+/* .search-button {
+    min-width: 100px;
+    width: 10%;
+    margin-top: 0;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    background-color: red;
+    border-color: darkred;   
+}
+
+.search-button:hover {  
+    background-color: darkred;
+    border-color: red;   
+} */
+
+.film-external-card {
+    background-color: lightskyblue;
+    border-radius: 20px;
+    width: 220px;
+    height: 120px;
+    margin: 2%;
+    padding: 10px;
+    font-size: 100%;
+    transition-duration: 0.2s;
+}
+
+.film-internal-card {
+    background-color: coral;
+    border-radius: 20px;
+    width: 200px;
+    height: 100px;
+    border: transparent;
+    padding: 10px;
+    font-size: 100%;
+    transition-duration: 0.2s;
+}
+
+.film-external-card:hover {
+    background-color: lightseagreen;
+    width: 230px;
+    height: 130px;
+    transition-duration: 0.2s;
+    filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 0));
+}
+
+.film-internal-card:hover {
+    background-color: orange;
+    width: 210px;
+    height: 110px;
+    transition-duration: 0.2s;
+}

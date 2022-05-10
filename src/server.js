@@ -15,6 +15,7 @@ app.set('views', __dirname+'/views');
 
 const port = 3000;
 
+//impiegato per il corretto utilizzo dei css
 app.use(express.static(__dirname + '/views'));
 
 // Gestione della sessione
