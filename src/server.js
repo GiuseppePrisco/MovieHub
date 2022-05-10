@@ -516,7 +516,7 @@ app.post('/results_film', function(req, res) {
 });
 
 
-app.post('/results_title', function(req, res) {
+/*app.post('/results_title', function(req, res) {
   var movie_id = req.body.movie_id;
     
   var option = {
@@ -531,6 +531,32 @@ app.post('/results_title', function(req, res) {
       if (response.statusCode == 200) {
         var info = JSON.parse(body);
         if (info!=undefined){
+          res.render("results_title", {info:info});   
+        }
+        else{
+          res.send("Il film cercato non esiste...");
+        }
+      }
+    }
+  });
+});
+*/
+
+app.get("/results_title", function(req,res){
+  var movie_id=req.query.id;
+  var option = {
+    url: 'https://api.themoviedb.org/3/movie/'+movie_id+'?api_key='+process.env.FILM_KEY+'&language=en-US',
+  }
+    
+  request.get(option,function(error, response, body){
+    if(error) {
+      console.log(error);
+    } 
+    else {
+      if (response.statusCode == 200) {
+        var info = JSON.parse(body);
+        if (info!=undefined){
+          console.log(info);
           res.render("results_title", {info:info});   
         }
         else{
