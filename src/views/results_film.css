@@ -88,10 +88,10 @@ body {
 .film-external-card {
     background-color: lightskyblue;
     border-radius: 20px;
-    width: 220px;
-    height: 120px;
+    width: 210px;
+    height: 110px;
     margin: 2%;
-    padding: 10px;
+    padding: 5px;
     font-size: 100%;
     transition-duration: 0.2s;
 }
@@ -111,6 +111,7 @@ body {
     background-color: lightseagreen;
     width: 230px;
     height: 130px;
+    padding: 10px;
     transition-duration: 0.2s;
     filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 0));
 }
