@@ -142,7 +142,7 @@ app.get('/registrazione', function(req, res){
               // se questo account google è già registrato torno alla home, altrimenti lo inserisco nel db e torno alla home
               if(data.rows[i].id === id){  
                 req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
-                res.send("Esiste");
+                res.render('index', {connected: true});
                 //res.redirect('/home'); // settare il fatto che l'utente è connesso!
                 return;
               }
@@ -171,7 +171,7 @@ app.get('/registrazione', function(req, res){
               else{
                 console.log("Registrazione di "+id+", "+info.name+" avvenuta");
                 req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
-                res.send("Nuovo");
+                res.render('index', {connected: true});
                 //res.redirect('/home');
               }
             });
@@ -362,7 +362,7 @@ app.get('/profilo', function(req, res){
 app.get('/logout', function(req, res){
   if (req.session.utente!=undefined){
     req.session.destroy();
-    res.redirect('/home');
+    res.render('index', {connected: false});
   }
   else{
     res.send("Errore: non hai ancora effettuato il login");
