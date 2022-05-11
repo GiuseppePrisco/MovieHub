@@ -32,8 +32,9 @@ body {
 }
 
 .my-navbar-menù{
-    margin-right: 15px;
+    margin-right: 20px;
     position: fixed;
+    display: flex;
     right: 0;
 }
 
@@ -50,6 +51,26 @@ body {
   /* background: #ddd; */
   color: black;
   border-radius: 10px;
+}
+
+.my-navbar button{
+    background-color: rgb(74, 0, 0);
+    float: left;
+    display: block;
+    border-style: solid;
+    border-color: rgb(74, 0, 0);
+    border-radius: 5px;
+    color: white;
+    padding: 10px 15px;
+}
+.my-navbar button:hover{
+    background-color: rgba(255, 255, 255, 0);
+    color: rgb(74, 0, 0);
+    font-weight: bold;
+    float: left;
+    display: block;
+    border-width: 3px;
+    padding: 10px 15px;
 }
 
 .main {
