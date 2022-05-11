@@ -47,7 +47,7 @@ body {
 }
 
 .my-navbar a:hover {
-  background: #ddd;
+  /* background: #ddd; */
   color: black;
   border-radius: 10px;
 }
@@ -78,14 +78,10 @@ body {
     border-radius: 10px;
     font-size: 20px;
     background-color: darkred;
-    /* background-color: red; */
-    /* border-color: darkred;    */
 }
 
 .search-button:hover {  
-    background-color: rgb(227, 72, 72);
-    /* background-color: darkred; */
-    /* border-color: red;    */
+    opacity: 0.8;
 }
 
 
