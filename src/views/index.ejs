@@ -15,10 +15,17 @@
         <div class="my-navbar-menù">
             <a href="/">Home</a>
             <a href="topMovie">Netflix Top 10</a>
-            <form action='login'>
-                <button>LOGIN</button>
-            </form> 
-            <!-- <a href="login">Login</a>  deve essere un button -->
+            <%if (connected==true){%>
+                <a href="profilo">Profilo</a>
+                <form action='logout'>
+                    <button>LOGOUT</button>
+                </form> 
+            <%}else{%>
+                <div style="display:none">><a href="profilo">Profilo</a></div>
+                <form action='login'>
+                    <button>LOGIN</button>
+                </form> 
+            <%}%>
         </div>
     </div>
 

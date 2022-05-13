@@ -43,6 +43,16 @@ app.use(function(req,res,next) {
 // Per chat-bot:
 const wss = new WebSocket.Server({port: 9998});
 
+app.get('/', function(req, res) {
+  if(req.session.utente==undefined){
+    connected=false;
+  }
+  else{
+    connected=true;
+  }
+  res.render('index',{connected:connected});
+});
+
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
 app.get('/login', function(req, res){
@@ -142,7 +152,8 @@ app.get('/registrazione', function(req, res){
               // se questo account google è già registrato torno alla home, altrimenti lo inserisco nel db e torno alla home
               if(data.rows[i].id === id){  
                 req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
-                res.render('index', {connected: true});
+                connected = true;
+                res.render('index', {connected:connected});
                 //res.redirect('/home'); // settare il fatto che l'utente è connesso!
                 return;
               }
@@ -171,7 +182,8 @@ app.get('/registrazione', function(req, res){
               else{
                 console.log("Registrazione di "+id+", "+info.name+" avvenuta");
                 req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
-                res.render('index', {connected: true});
+                connected = true;
+                res.render('index', {connected:connected});
                 //res.redirect('/home');
               }
             });
@@ -362,10 +374,12 @@ app.get('/profilo', function(req, res){
 app.get('/logout', function(req, res){
   if (req.session.utente!=undefined){
     req.session.destroy();
-    res.render('index', {connected: false});
+    connected=false;
+    res.render('index', {connected:connected});
   }
   else{
-    res.send("Errore: non hai ancora effettuato il login");
+    connected = false;
+    res.render('index', {connected:conntected});
   }
 });
 
@@ -467,31 +481,6 @@ wss.on('connection', function connection(ws) {
 //inizio aggiunta delle pagine di ricerca e registrazione, il resto non è stato modificato
 // le pagine relative alla registrazione vanno riviste e integrate con oauth e di conseguenza
 //non rimarranno in questa sezione relativa a tmdb
-
-app.get('/', function(req, res) {
-  res.render('index');
-});
-
-app.get('/registration', function(req, res) {
-  res.render('registration');
-});
-
-app.post('/registration', function(req, res) {
-  var name = req.body.name;
-  var surname = req.body.surname;
-  var email = req.body.email;
-  var password = req.body.password;
-  console.log("nome: "+name+", cognome: "+surname+", email: "+email+", password: "+password);
-  res.render('homepage');
-});
-
-//fine pagine sulla registrazione
-
-/*
-app.get("/homepage", function(req,res){
-  res.render('homepage')
-});
-*/
 
 app.post('/results_film', function(req, res) {
   var titolo = req.body.search; 

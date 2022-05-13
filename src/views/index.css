@@ -55,6 +55,7 @@ body {
 
 .my-navbar button{
     background-color: rgb(74, 0, 0);
+    margin-left: 3px;
     float: left;
     display: block;
     border-style: solid;
@@ -65,6 +66,7 @@ body {
 }
 .my-navbar button:hover{
     background-color: rgba(255, 255, 255, 0);
+    margin-left: 3px;
     color: rgb(74, 0, 0);
     font-weight: bold;
     float: left;
