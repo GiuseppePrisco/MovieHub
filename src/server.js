@@ -362,12 +362,13 @@ app.get('/profilo', function(req, res){
       }
       else{
         info = JSON.parse(body);
-        res.send(info);
+        info_utente = info;
+        res.render('profilo', {info_utente:info_utente});
       }
     });
   }
   else{
-    res.redirect('/login');
+    res.redirect('/');
   }
 });
 
