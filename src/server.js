@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var bodyParser = require("body-parser");
-//var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 app.use(bodyParser.urlencoded({ extended: false }));
 var request = require('request');
@@ -19,8 +18,6 @@ const port = 3000;
 app.use(express.static(__dirname + '/views'));
 
 // Gestione della sessione
-//app.use(cookieParser()); 
-
 app.use(expressSession({
   secret: 'MovieHub',
   resave: false,
@@ -36,7 +33,6 @@ app.use(function(req,res,next) {
   next();   
 }); 
 
-// DA COMPLETARE !!!! 
 
 /* ********************************* FINE DIPENDENZE ****************************************** */
 
@@ -184,7 +180,6 @@ app.get('/registrazione', function(req, res){
                 req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
                 connected = true;
                 res.render('index', {connected:connected});
-                //res.redirect('/home');
               }
             });
           }
@@ -208,7 +203,9 @@ app.get('/delete_account', function(req, res){
       }
       else{
         req.session.destroy();
-        res.send("Utente cancellato");
+        connected = false;
+        res.render('index', {connected:connected});
+        res.redirect('/');
       }
     });
   }
@@ -413,75 +410,68 @@ wss.on('connection', function connection(ws) {
     //rendo la prima lettera maiuscola e le altre minuscole
     var mes=data.toString();
     mes=mes[0].toUpperCase()+mes.slice(1).toLowerCase();
+    console.log(mes);
+    
+    
+    var lista;
+    var genere_id;
+    var suggerito;
 
-    if (mes == 'Stop'){
-      ws.send('Ciao e buona visione!');
-      ws.close();
+    var option = {
+      url: 'https://api.themoviedb.org/3/genre/movie/list?api_key='+process.env.FILM_KEY+'&language=it-IT', 
     }
-    else{
-      var lista;
-      var genere_id;
-      var suggerito;
-
-      var option = {
-        url: 'https://api.themoviedb.org/3/genre/movie/list?api_key='+process.env.FILM_KEY+'&language=it-IT', 
-      }
       
-      request.get(option,function(error, response, body){
-        if(error) {
-          console.log(error);
-        } else {
-          if (response.statusCode == 200) {
-            lista = JSON.parse(body).genres;
-            var trovato=0;
-            // cerco l'id del genere per le richiesta successiva
-            for (var i=0; i<lista.length; i++){
-              if (mes == lista[i].name){
-                trovato=1;
-                genere_id=lista[i].id
-                break;
-              }
-            }
-
-            // Se il dato inserito non è corretto 
-            if (!trovato){
-              ws.send('Genere non trovato, mi dispiace :-(');
-            }
-
-            else{
-              // richiesta del film secondo dall'id del genere
-              option = {
-                url: 'https://api.themoviedb.org/3/discover/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&sort_by=popularity.desc&with_genres='+genere_id, // rendere segreta la chiave 
-              }
-      
-              request.get(option,function(error, response, body){
-                if(error) {
-                  console.log(error);
-                } else {
-                  if (response.statusCode == 200) {
-                    var info = JSON.parse(body);
-                    suggerito = info.results[0].title;
-                    ws.send("Ti suggerisco di guardare: "+suggerito);
-                  }
-                }
-              });
+    request.get(option,function(error, response, body){
+      if(error) {
+        console.log(error);
+      } else {
+        if (response.statusCode == 200) {
+          lista = JSON.parse(body).genres;
+          var trovato=0;
+          // cerco l'id del genere per le richiesta successiva
+          for (var i=0; i<lista.length; i++){
+            if (mes == lista[i].name){
+              trovato=1;
+              genere_id=lista[i].id
+              break;
             }
           }
+
+          // Se il dato inserito non è corretto 
+          if (!trovato){
+            ws.send('Genere non trovato, mi dispiace :-(');
+          }
+
+          else{
+            // richiesta del film secondo dall'id del genere
+            option = {
+              url: 'https://api.themoviedb.org/3/discover/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&sort_by=popularity.desc&with_genres='+genere_id, // rendere segreta la chiave 
+            }
+      
+            request.get(option,function(error, response, body){
+              if(error) {
+                console.log(error);
+              } else {
+                if (response.statusCode == 200) {
+                  var info = JSON.parse(body);
+                  i = Math.round(Math.random()*2); // numero casuale tra 0 e 2 (primi 3 film)
+                  suggerito = info.results[i].title;
+                  ws.send("Ti suggerisco di guardare: "+suggerito);
+                }
+              }
+            });
+          }
         }
-      });
-    }
+      }
+    });
   });
   // Messaggio di benvenuto
-  ws.send('Ciao! Inserisci un genere che ti consiglio un film da cercare, "Stop" per terminare :-)');
+  ws.send('Ciao! Inserisci un genere che ti consiglio un film da cercare...');
 });
 
 /* *********************************** FINE CHAT BOT ******************************************* */
 
 /* *************************************** TMDB *********************************************** */
-
-//inizio aggiunta delle pagine di ricerca e registrazione, il resto non è stato modificato
-// le pagine relative alla registrazione vanno riviste e integrate con oauth e di conseguenza
-//non rimarranno in questa sezione relativa a tmdb
 
 app.post('/results_film', function(req, res) {
   var titolo = req.body.search; 
@@ -508,37 +498,10 @@ app.post('/results_film', function(req, res) {
   });
 });
 
-
-/*app.post('/results_title', function(req, res) {
-  var movie_id = req.body.movie_id;
-    
-  var option = {
-    url: 'https://api.themoviedb.org/3/movie/'+movie_id+'?api_key='+process.env.FILM_KEY+'&language=en-US',
-  }
-    
-  request.get(option,function(error, response, body){
-    if(error) {
-      console.log(error);
-    } 
-    else {
-      if (response.statusCode == 200) {
-        var info = JSON.parse(body);
-        if (info!=undefined){
-          res.render("results_title", {info:info});   
-        }
-        else{
-          res.send("Il film cercato non esiste...");
-        }
-      }
-    }
-  });
-});
-*/
-
 app.get("/results_title", function(req,res){
   var movie_id=req.query.id;
   var option = {
-    url: 'https://api.themoviedb.org/3/movie/'+movie_id+'?api_key='+process.env.FILM_KEY+'&language=en-US',
+    url: 'https://api.themoviedb.org/3/movie/'+movie_id+'?api_key='+process.env.FILM_KEY+'&language=it-IT',
   }
     
   request.get(option,function(error, response, body){
@@ -560,19 +523,12 @@ app.get("/results_title", function(req,res){
   });
 });
 
-//fine aggiunta delle pagine di ricerca, il resto non è stato modificato
 
-app.get("/cercaTitolo", function(req,res){
-  res.render('prova')
-});
-
-// Primo esempio per fare la chiamata rest al TMDB --> database dei film
 app.post('/cercaTitolo',function(req,res){
   var titolo = req.body.search; // da mettere nell'html
   var movie_id="";
     
   // per ottenere l'id del film utile per la richiesta delle informazioni del film
-
   var option = {
     url: 'https://api.themoviedb.org/3/search/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&query='+titolo, 
   }
@@ -587,25 +543,6 @@ app.post('/cercaTitolo',function(req,res){
         if (info.results.length>0){
           res.render("results", {info:info});
         }
-      
-          
-          // altra chiamata REST per mostrare i dettagli del film --> bisogna farne altre per ottenere attori, ecc.
-          // request.get('https://api.themoviedb.org/3/movie/'+movie_id+'?api_key='+process.env.FILM_KEY+'&language=it-IT', function(error, response, body){
-          //   if(error) {
-          //     console.log(error);
-          //   } else {
-          //     if (response.statusCode == 200) {
-          //       var info = JSON.parse(body);
-          //       console.log("Paese: "+info.production_countries[0].name); // NELLA PAGINA CON LE INFO DEL FILM FARE UNA CHIAMATA A QUALCHE API DI MAPPE CON EVIDENZIATI I DIVERSI PAESI IN CUI E' STATO GIRATO 
-          //       // ... aprire la pagina con il titolo del film e le varie informazioni
-
-          //     }
-          //     else{
-          //       res.send(response.statusCode+" "+body); // da modificare 
-          //     }
-          //     console.log(response.statusCode, body);
-          //   }
-          // });
         else{
           res.send("Il film cercato non esiste...");
         }
@@ -616,27 +553,7 @@ app.post('/cercaTitolo',function(req,res){
       // }
       // console.log(response.statusCode, body);
     }
-  });
-
-  /* QUI NON FUNZIONA, DENTRO ALL'ALTRA FUNZIONE SI' MA E' DA CAMBIARE QUALCOSA */
-  // altra chiamata REST per mostrare i dettagli del film --> bisogna farne altre per ottenere attori, ecc.
-  // request.get('https://api.themoviedb.org/3/movie/'+movie_id+'?api_key='+process.env.FILM_KEY+'&language=it-IT', function(error, response, body){
-  //   if(error) {
-  //     console.log(error);
-  //   } else {
-  //     if (response.statusCode == 200) {
-  //       var info = JSON.parse(body);
-  //       console.log("Paese: "+info.production_countries[0].name); // NELLA PAGINA CON LE INFO DEL FILM FARE UNA CHIAMATA A QUALCHE API DI MAPPE CON EVIDENZIATI I DIVERSI PAESI IN CUI E' STATO GIRATO 
-  //       // ... aprire la pagina con il titolo del film e le varie informazioni
-
-  //     }
-  //     else{
-  //       res.send(response.statusCode+" "+body); // da modificare 
-  //     }
-  //     console.log(response.statusCode, body);
-  //   }
-  // }); 
-
+  }); 
 });
 
 /* **************************************** FINE TMDB ************************************************* */
@@ -670,7 +587,6 @@ app.get('/topMovie', function(req, res){
         res.send(output);
       }
     }
-
   });
 })
 

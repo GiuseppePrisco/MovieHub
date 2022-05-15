@@ -2,7 +2,7 @@ version: '3'
 
 services:
     nginx:
-        image: nginx:latest
+        image: "nginx:latest"
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf
             - ./certs:/etc/nginx/certs
@@ -17,7 +17,7 @@ services:
             - app-network
 
     couchdb:
-        image: couchdb
+        image: "couchdb"
         networks:
             - app-network
         environment:
@@ -30,8 +30,7 @@ services:
         restart: on-failure
 
     nodejs:
-        build:
-            context: ./src
+        build: "./src"
         ports:
             - "3000:3000"
             - "9998:9998"
