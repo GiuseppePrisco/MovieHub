@@ -1,0 +1,9 @@
+.main-table{
+    width: 100%;
+    /* border: red solid 1px; */
+}
+
+.main-table td {
+    width: 50%;
+    /* border: solid blue 1px; */
+}
