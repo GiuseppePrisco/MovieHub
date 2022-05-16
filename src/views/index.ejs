@@ -48,13 +48,6 @@
                         <div class="col-md-auto">
                             <h3>Inserisci il titolo di un Film</h3>
                             <div class="col col-lg-15">
-                                <!-- <div class="form-floating mb-3">
-                                    <input type="text" name="search" class="form-control" id="floatingInput validationServer03" aria-describedby="validationServer03Feedback" required>
-                                    <label for="floatingInput">Search for Movies</label>
-                                    <div id="validationServer03Feedback" class="invalid-feedback">
-                                        Please provide a valid Movie
-                                    </div>
-                                </div> -->
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" id="searchTitle validationServer03" placeholder="Search for a movie..." aria-describedby="validationServer03Feedback" required>
                                     <div id="validationServer03Feedback" class="invalid-feedback">
@@ -70,9 +63,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col-12">
-                    <button class="search-button" type="submit"><font color="white">Cerca</font></button>
-                </div> -->
             </form>
             
             <!-- <br> -->
@@ -96,76 +86,74 @@
             <br>
             <h3>Fatti consigliare un titolo dalla nostra chat-BOT!</h3>
             <br>
-            <br>
-            
-            <!-- CHAT-BOT -->
-            <div id="chat-btn" class="btn btn-raised" onclick="javascript:mostra()">
-                <b><i class="bi bi-chat"></i></b> Chat-Bot
-            </div>
-            <div class="container-chat" id="cont-chat">
-                <div class="chat-box-header">
-                    Chat-bot
-                    <span class="chat-box-toggle" onclick="javascript:chiudi()"><i class="bi bi-x-lg"></i></span>
-                </div>
-                <div class="chat-box" id="chat-box">
-                    <div id="messages" class="messages"></div>
-                </div>
-                <form id="msgForm" class="msgForm">
-                    <input type="text" placeholder="Send a message" class="input" id="inputBox"/>
-                    <input type="submit" class="send-btn" value="Send">
-                </form>
-            </div>
-            <script type="text/javascript">
-                var bottone = document.getElementById('chat-btn');
-                var chat = document.getElementById('cont-chat')
-                function mostra(){
-                    bottone.style.display="none";
-                    chat.style.display="flex";
-
-                    const ws=new WebSocket('ws://localhost:9998/');
-
-                    ws.onopen=function(){ }
-
-                    ws.onmessage = function(message){
-                        const msgDiv=document.createElement('div');
-                        msgDiv.classList.add('msgCtn1');
-                        msgDiv.innerHTML = message.data;
-                        document.getElementById('messages').appendChild(msgDiv);
-                        messages = document.getElementById('messages'); 
-                        var xH = messages.scrollHeight; 
-                        messages.scrollTo({top:xH, behavior:'smooth'});
-                    }
-    
-                    const form=document.getElementById('msgForm');
-                    form.addEventListener('submit',(event) => {
-                        event.preventDefault();
-                        const message=document.getElementById('inputBox').value;
-                        if (message==''){ 
-                            return false; 
-                        }
-                        const msgDiv=document.createElement('div');
-                        msgDiv.classList.add('msgCtn2');
-                        msgDiv.innerHTML = message;
-                        document.getElementById('messages').appendChild(msgDiv);
-                        ws.send(message);
-                        document.getElementById('inputBox').value='';
-                        messages = document.getElementById('messages'); 
-                        var xH = messages.scrollHeight; 
-                        messages.scrollTo({top:xH, behavior:'smooth'});
-                    })
-                };
-
-                function chiudi(){
-                    bottone.style.display="block";
-                    chat.style.display="none";
-                    messages = document.getElementById('messages');
-                    messages.innerHTML="";
-                }
-                
-            </script>
-            
-
+            <br>            
         </div>
+        
+        <!-- CHAT-BOT -->
+        <div id="chat-btn" class="btn btn-raised" onclick="javascript:mostra()">
+            <b><i class="bi bi-chat"></i></b> Chat-Bot
+        </div>
+        <div class="container-chat" id="cont-chat">
+            <div class="chat-box-header">
+                Chat-bot
+                <span class="chat-box-toggle" onclick="javascript:chiudi()"><i class="bi bi-x-lg"></i></span>
+            </div>
+            <div class="chat-box" id="chat-box">
+                <div id="messages" class="messages"></div>
+            </div>
+            <form id="msgForm" class="msgForm">
+                <input type="text" placeholder="Send a message" class="input" id="inputBox"/>
+                <input type="submit" class="send-btn" value="Send">
+            </form>
+        </div>
+        <script type="text/javascript">
+            var bottone = document.getElementById('chat-btn');
+            var chat = document.getElementById('cont-chat')
+            function mostra(){
+                bottone.style.display="none";
+                chat.style.display="flex";
+
+                const ws=new WebSocket('ws://localhost:9998/');
+
+                ws.onopen=function(){ }
+
+                ws.onmessage = function(message){
+                    const msgDiv=document.createElement('div');
+                    msgDiv.classList.add('msgCtn1');
+                    msgDiv.innerHTML = message.data;
+                    document.getElementById('messages').appendChild(msgDiv);
+                    messages = document.getElementById('messages'); 
+                    var xH = messages.scrollHeight; 
+                    messages.scrollTo({top:xH, behavior:'smooth'});
+                }
+
+                const form=document.getElementById('msgForm');
+                form.addEventListener('submit',(event) => {
+                    event.preventDefault();
+                    const message=document.getElementById('inputBox').value;
+                    if (message==''){ 
+                        return false; 
+                    }
+                    const msgDiv=document.createElement('div');
+                    msgDiv.classList.add('msgCtn2');
+                    msgDiv.innerHTML = message;
+                    document.getElementById('messages').appendChild(msgDiv);
+                    ws.send(message);
+                    document.getElementById('inputBox').value='';
+                    messages = document.getElementById('messages'); 
+                    var xH = messages.scrollHeight; 
+                    messages.scrollTo({top:xH, behavior:'smooth'});
+                })
+            };
+
+            function chiudi(){
+                bottone.style.display="block";
+                chat.style.display="none";
+                messages = document.getElementById('messages');
+                messages.innerHTML="";
+            }
+            
+        </script>
     </div>
 </body>
 </html>
