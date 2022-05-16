@@ -717,6 +717,49 @@ app.post('/results_film', function(req, res) {
   });
 });
 
+app.get("/results_topten", function(req, res){
+  var movie_name=req.query.name;
+  var option = {
+    url: 'https://api.themoviedb.org/3/search/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&query='+movie_name, 
+  }
+  request.get(option, function(error, response, body){
+    if (error){
+      console.log(error);
+    }
+    else{
+      if (response.statusCode==200){
+        var info= JSON.parse(body);
+        if (info.results.length>=0){
+          var option = {
+            url: 'https://api.themoviedb.org/3/movie/'+info.results[0].id+'?api_key='+process.env.FILM_KEY+'&language=it-IT',
+          }
+            
+          request.get(option,function(error, response, body){
+            if(error) {
+              console.log(error);
+            } 
+            else {
+              if (response.statusCode == 200) {
+                var info = JSON.parse(body);
+                if (info!=undefined){
+                  console.log(info);
+                  res.render("results_title", {info:info});   
+                }
+                else{
+                  res.send("Il film cercato non esiste...");
+                }
+              }
+            }
+          });
+        }
+        else{
+          res.send("Il film cercato non esiste...");
+        }
+      }
+    }
+  })
+})
+
 app.get("/results_title", function(req,res){
   var movie_id=req.query.id;
   var option = {
@@ -799,11 +842,8 @@ app.get('/topMovie', function(req, res){
         res.redirect(404, 'Errore');
       }
       else{
-        var output='1) '+info[0].name+'<br>';
-        for (var i=1; i<info.length; i++){
-          output+=i+1+') '+info[i].name+'</br>';
-        }
-        res.send(output);
+        res.render("top_movies", {info:info});
+        console.log(info);
       }
     }
   });
