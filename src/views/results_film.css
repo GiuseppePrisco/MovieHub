@@ -90,18 +90,18 @@ body {
     height: 130px;
     margin: 2%;
     padding: 5px;
-    font-size: 100%;
+    font-size: 20px;
     transition-duration: 0.2s;
 }
 
 .film-internal-card {
-    background-color: coral;
+    background-color: rgb(180, 180, 180);
     border-radius: 20px;
     width: 210px;
     height: 120px;
     border: transparent;
     padding: 10px;
-    font-size: 100%;
+    font-size: 20px;
     transition-duration: 0.2s;
 }
 
@@ -115,8 +115,9 @@ body {
 } */
 
 .film-internal-card:hover {
-    background-color: orange;
+    background-color: darkred;
     width: 220px;
     height: 130px;
+    color: white;
     transition-duration: 0.2s;
 }
