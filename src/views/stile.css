@@ -207,11 +207,11 @@ body {
     margin: 6px 0;
     margin-right: 100px;
     margin-left: 10px;
-    color: white;
+    color: rgb(0, 0, 0);
     padding: 1rem 1rem;
     float: left;
     text-align: left;
-    background-color: #dfa0a0;
+    background-color: #c6c6c6;
     /* background-color: #9dabe0; */
     border-radius: 20px 20px 20px 0px;
     font-size: 16px;
@@ -220,7 +220,7 @@ body {
     margin: 6px 0;
     margin-left: 200px;
     margin-right: 10px;
-    color: white;
+    color: rgb(0, 0, 0);
     padding: 1rem 1rem;
     text-align: right;
     /* background-color: #a6d0a7; */
@@ -273,4 +273,5 @@ body {
     border:none;
     font-size: 14px;
 }
+
 

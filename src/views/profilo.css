@@ -7,3 +7,28 @@
     width: 50%;
     /* border: solid blue 1px; */
 }
+
+.barra-princ{
+    display: flex;
+    position: relative;
+    left: 50px;
+}
+.barra-princ-nome{
+    margin-left: 50px;
+}
+.barra-princ-nome p{
+    font-size: 13px;
+    text-align: left;
+}
+.colonne{
+    display: grid;
+    column-gap: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.col-dx{
+    grid-column: 2;
+}
+.col-sx{
+    grid-column: 1;
+}

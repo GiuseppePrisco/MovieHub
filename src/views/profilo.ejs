@@ -33,13 +33,11 @@
 
     <div class="main">
         <div class="main-box soft-shadow">
-            <!-- <br>
-            <h1>Profilo</h1> -->
             <br>
              <% if (info_utente!=""){ %>
-            <table class="main-table">
+            <!-- <table class="main-table">
                 <tr>
-                    <td colspan="2">
+                    <td colspan="1">
                         <h3><%= info_utente.name %></h3>
                     </td>
                 </tr>
@@ -50,52 +48,84 @@
                 </tr>
                 <tr>
                 <% if (info_utente.calendar!=""){ %>
-                    <td rowspan="3">
+                    <td rowspan="3"> -->
                         <!-- per rendere il calendario più completo se ne possono aggiungere altri pubblici -->
-                        <iframe src="https://calendar.google.com/calendar/embed?src=<%= info_utente.calendar %>&src=it.italian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FRome" style="border: 0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
+                        <!-- <iframe src="https://calendar.google.com/calendar/embed?src=<%= info_utente.calendar %>&src=it.italian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FRome" style="border: 0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
                     </td>
                 <% } else { %>
                     <td rowspan="3">
                         Non hai ancora creato un calendar!
                     </td>
                 <%}%>
-                <td>
+                <td> -->
                     <!-- <h5> -->
-                        Create or Replace Calendar<br><br>
+                        <!-- Create or Replace Calendar<br><br> -->
                     <!-- </h5> -->
-                    <a href="/add_calendar">
+                    <!-- <a href="/add_calendar">
                         <button>Calendar</button>
                     </a>
                 </td>
                 </tr>
                 <tr>
                     <td>
-                        <br>
+                        <br> -->
                         <!-- <h5> -->
-                            Add a new Event to Calendar if it exists, <br>
-                            otherwise a new calendar will be created<br><br>
+                            <!-- Add a new Event to Calendar if it exists, <br>
+                            otherwise a new calendar will be created<br><br> -->
                         <!-- </h5> -->
-                        <a href="/add_event">
+                        <!-- <a href="/add_event">
                             <button>Event</button>
                         </a>   
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td> -->
                         <!-- <h5> -->
-                            Delete the Calendar if it exists<br><br>
+                            <!-- Delete the Calendar if it exists<br><br> -->
                         <!-- </h5> -->
-                        <a href="/delete_calendar">
+                        <!-- <a href="/delete_calendar">
                             <button>Delete</button>
                         </a>   
                     </td>
                 </tr>
 
-            </table>
-            <%}%>
-            
-            
+            </table> -->
 
+            <div class="barra-princ">
+                <img style="border-radius: 50%; height:100px; width:100px" src=<%= info_utente.picture %>> 
+                <div class=barra-princ-nome>
+                    <h3><%= info_utente.name %></h3>
+                    <p>
+                        Nome: <%= info_utente.given_name %><br>
+                        Cognome: <%= info_utente.family_name %><br>
+                        Nazionalità: <%= info_utente.locale%>
+                    </p>
+                </div>
+                <!-- aggiungere tasto per eliminare account -->
+            </div>
+            <br>
+            <div class="colonne">
+                <div class="col-six">
+                    <br>
+                    <h5>Ecco il tuo calendario</h5>
+                    <br>
+                    <!-- aggiungere bottoni per interagire con calendario -->
+                    <iframe src="https://calendar.google.com/calendar/embed?src=<%= info_utente.calendar %>&src=it.italian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FRome" style="border: 0" width="90%" height="400" frameborder="0" scrolling="no"></iframe>
+                </div>
+                <div class="col-dx">
+                    <br>
+                    <h5>I film che ti piacciono:</h5>
+                    <ul style="text-align:left;">
+                    <% for (var i=0; i<info_utente.my_list.length; i++){ %>
+                        <li><%= info_utente.my_list[i]%></li> 
+                        <!-- aggiungere bottone a destra per rimuovere dai mi piace -->
+                    <%}%>
+                    </ul>
+                    
+                </div>
+            </div>
+            <br><br>
+            <%}%>
         </div>
     </div>
 </body>
