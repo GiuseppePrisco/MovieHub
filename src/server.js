@@ -6,6 +6,7 @@ var expressSession = require('express-session');
 app.use(bodyParser.urlencoded({ extended: false }));
 var request = require('request');
 const WebSocket = require('ws');
+const { info } = require('console');
 require('dotenv').config();
 
 
@@ -563,6 +564,49 @@ app.post('/add_event', function(req, res) {
 
 /* ************************************** PROFILO ********************************************* */
 
+app.post('/aggiungiPreferiti', function(req, res){
+  var id_utente = req.query.id;
+  var title = req.query.title;
+  var info_utente;
+  request({
+    url: 'http://admin:admin@couchdb:5984/users/'+id_utente.toString(),
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json;charset=UTF-8'
+    },
+  }, function(error, response, body){
+    if (error){
+      console.log("Error:");
+      console.log(error);
+    }
+    else{
+      info_utente = JSON.parse(body);
+      info_utente.my_list.push(title);
+      console.log(info_utente);
+      request({
+        url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify(info_utente),
+      }, function(error, response, body){
+        console.log(info_utente);
+        console.log("Response 2:");
+        if (error){
+          console.log("Error 2:");
+          console.log(error);
+        }
+        else{
+          console.log(body);
+          res.send("true");
+        }
+      });
+    }
+  });
+    
+});
+
 app.get('/profilo', function(req, res){
   if (req.session.utente!=undefined){
     request({
@@ -742,8 +786,8 @@ app.get("/results_topten", function(req, res){
               if (response.statusCode == 200) {
                 var info = JSON.parse(body);
                 if (info!=undefined){
-                  console.log(info);
-                  res.render("results_title", {info:info});   
+                  console.log(req.session.utente);
+                  res.render("results_title", {info:info, connected:connected});   
                 }
                 else{
                   res.send("Il film cercato non esiste...");
@@ -773,9 +817,10 @@ app.get("/results_title", function(req,res){
     else {
       if (response.statusCode == 200) {
         var info = JSON.parse(body);
+        var id_utente=req.session.utente;
+        console.log("utente"+id_utente);
         if (info!=undefined){
-          console.log(info);
-          res.render("results_title", {info:info});   
+            res.render("results_title", {info:info, id_utente: id_utente, connected:connected}); 
         }
         else{
           res.send("Il film cercato non esiste...");
