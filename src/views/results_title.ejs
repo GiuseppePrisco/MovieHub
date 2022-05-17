@@ -38,6 +38,7 @@
     </div>
     <div class="main">
         <div class="main-box-details soft-shadow">
+            <br>
             <h1 class="text-center"><%= info.original_title%></h1>
             <br>
             <div class="container">
@@ -47,10 +48,15 @@
                             <div class="row text-center">
                               <div class="col"><img src="https://image.tmdb.org/t/p/w300/<%=info.poster_path%>"></div>
                             </div>
+                            <br>
                             <div class="row text-center">
                               <div class="col">
-                                  <button class="heart-button" id="heart-button" onclick='aggiungiPreferiti("<%=id_utente%>", "<%=title%>")'>Aggiungi ai preferiti <i class='fa fa-heart-o'></i></button>
-                              </div>
+                                <%if (id_utente!=undefined){%>
+                                    <button class="heart-button" id="heart-button" onclick='aggiungiPreferiti("<%=id_utente%>", "<%=title%>")'>Aggiungi ai preferiti <i class='fa fa-heart-o'></i></button>
+                                <%} else{%>
+                                    <button disabled style="opacity: 0.5; cursor: not-allowed;" class="heart-button" id="heart-button-d">Aggiungi ai preferiti <i class='fa fa-heart-o'></i></button>
+                                <%}%>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -69,11 +75,13 @@
                             </tr>
                             <tr>
                                 <td>
+                                    <br>
                                     <h4>Status: </h4><%= info.status%> 
                                 </td>
                             </tr>
                             <tr>
                                 <td>
+                                    <br>
                                     <h4>Generi: </h4>
                                 </td>
                             </tr>

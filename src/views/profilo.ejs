@@ -33,9 +33,8 @@
 
     <div class="main">
         <div class="main-box soft-shadow">
-            <br>
-            <br>
-            <h1>Profilo</h1>
+            <!-- <br>
+            <h1>Profilo</h1> -->
             <br>
              <% if (info_utente!=""){ %>
             <table class="main-table">
@@ -46,24 +45,24 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <img src=<%= info_utente.picture %>>
+                        <img style="border-radius: 50%;" src=<%= info_utente.picture %>>
                     </td>
                 </tr>
                 <tr>
                 <% if (info_utente.calendar!=""){ %>
                     <td rowspan="3">
                         <!-- per rendere il calendario più completo se ne possono aggiungere altri pubblici -->
-                        <iframe src="https://calendar.google.com/calendar/embed?src=<%= info_utente.calendar %>&src=it.italian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FRome" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                        <iframe src="https://calendar.google.com/calendar/embed?src=<%= info_utente.calendar %>&src=it.italian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FRome" style="border: 0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
                     </td>
                 <% } else { %>
                     <td rowspan="3">
-                        <h3>Non hai ancora creato un calendar!</h3>
+                        Non hai ancora creato un calendar!
                     </td>
                 <%}%>
                 <td>
-                    <h3>
-                        Create or Replace Calendar
-                    </h3>
+                    <!-- <h5> -->
+                        Create or Replace Calendar<br><br>
+                    <!-- </h5> -->
                     <a href="/add_calendar">
                         <button>Calendar</button>
                     </a>
@@ -71,11 +70,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <h3>
+                        <br>
+                        <!-- <h5> -->
                             Add a new Event to Calendar if it exists, <br>
-                            otherwise <br>
-                            a new calendar will be created
-                        </h3>
+                            otherwise a new calendar will be created<br><br>
+                        <!-- </h5> -->
                         <a href="/add_event">
                             <button>Event</button>
                         </a>   
@@ -83,9 +82,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <h3>
-                            Delete the Calendar if it exists
-                        </h3>
+                        <!-- <h5> -->
+                            Delete the Calendar if it exists<br><br>
+                        <!-- </h5> -->
                         <a href="/delete_calendar">
                             <button>Delete</button>
                         </a>   

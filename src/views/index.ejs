@@ -41,7 +41,7 @@
             <h1>Qui trovi le informazioni di tutti i film che vuoi!</h1>
             <br>
 
-            <form id='search' class="md" action="http://localhost:3000/results_film" method="POST">
+            <form id='search' class="md" action="https://localhost:3000/results_film" method="POST">
                      
                 <div class="container">
                     <div class="row justify-content-md-center">
@@ -68,10 +68,16 @@
             <!-- <br> -->
             <br>
             <br>
-            <h3>Accedi per iniziare</h3>
+            <h3>Accedi con Google per iniziare</h3>
+            <%if (connected==false){%>
             <form action='login'>
-                <button class="search-button soft-shadow">Login</button>
+                    <button class="search-button soft-shadow"><img width="25px" heigth="25px" style="margin-bottom: 5px; margin-right: 5px" src="https://static.cdnlogo.com/logos/g/35/google-icon.svg">Login</button>     
             </form>
+            <%} else{%>
+            <form action='logout'></form>
+                    <button class="search-button soft-shadow"><img width="25px" heigth="25px" style="margin-bottom: 5px; margin-right: 5px" src="https://static.cdnlogo.com/logos/g/35/google-icon.svg">Logout</button>      
+            </form>
+            <%}%>
             <!-- <br> -->
             <br>
             <br>
@@ -113,7 +119,7 @@
                 bottone.style.display="none";
                 chat.style.display="flex";
 
-                const ws=new WebSocket('ws://localhost:9998/');
+                const ws=new WebSocket('wss://localhost:3000/chat');
 
                 ws.onopen=function(){ }
 

@@ -63,7 +63,7 @@ body {
     /* border: solid yellow 1px; */
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: center;
     align-content: space-around;
 }
 

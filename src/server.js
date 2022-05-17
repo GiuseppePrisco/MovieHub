@@ -6,6 +6,7 @@ var expressSession = require('express-session');
 app.use(bodyParser.urlencoded({ extended: false }));
 var request = require('request');
 const WebSocket = require('ws');
+const https = require('https')
 const { info } = require('console');
 require('dotenv').config();
 
@@ -37,8 +38,15 @@ app.use(function(req,res,next) {
 
 /* ********************************* FINE DIPENDENZE ****************************************** */
 
+const server = https.createServer({
+  key: fs.readFileSync('security/key.pem'),
+  cert: fs.readFileSync('security/cert.pem')
+}, app);
+
+server.addListener('upgrade',(req, res, head) => console.log('UPGRADE:', req.url));
+
 // Per chat-bot:
-const wss = new WebSocket.Server({port: 9998});
+const wss = new WebSocket.Server({server, path: '/chat'});
 
 app.get('/', function(req, res) {
   if(req.session.utente==undefined){
@@ -57,7 +65,7 @@ app.get('/login', function(req, res){
     res.send("Sei già connesso!");
   }
   else{
-    res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
+    res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=https://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
   }
 }); 
 
@@ -76,7 +84,7 @@ app.get('/gtoken', function(req, res){
     code: req.query.code,
     client_id: process.env.G_CLIENT_ID,
     client_secret: process.env.G_CLIENT_SECRET,
-    redirect_uri: "http://localhost:3000/googlecallback",
+    redirect_uri: "https://localhost:3000/googlecallback",
     grant_type: 'authorization_code'
   }
 
@@ -620,8 +628,8 @@ app.get('/profilo', function(req, res){
         console.log(error);
       }
       else{
-        info = JSON.parse(body);
-        var info_utente = info;
+        info_p = JSON.parse(body);
+        var info_utente = info_p;
         console.log(info_utente);
         res.render('profilo', {info_utente:info_utente});
       }
@@ -643,26 +651,7 @@ app.get('/logout', function(req, res){
     res.render('index', {connected:connected});
   }
 });
-
-app.get('/calendario', function(req,res){
-  if(req.session.google_token==undefined){ 
-    //siamo qui solo se dalla barra si digita /registrazione
-    return res.send("ERRORE!"); // invece di questo redirect a una pagina d'errore
-  }
-  
-  var google_token = req.session.google_token;
-  var url = 'https://www.googleapis.com/calendar/v3/users/me/calendarList';
-  var headers = {'Authorization': 'Bearer '+google_token};
-
-  request.get( {headers: headers, url: url}, function(error, response, body){
-    if (error){
-      console.log(error);
-    }
-    var info = JSON.parse(body);
-    console.log(info);
-    res.send(info);
-  });
-});
+ 
 
 /* *********************************** FINE PROFILO ******************************************* */
 
@@ -787,7 +776,8 @@ app.get("/results_topten", function(req, res){
                 var info = JSON.parse(body);
                 if (info!=undefined){
                   console.log(req.session.utente);
-                  res.render("results_title", {info:info, connected:connected});   
+                  id_utente = req.session.utente;
+                  res.render("results_title", {info:info, connected:connected, id_utente: id_utente});   
                 }
                 else{
                   res.send("Il film cercato non esiste...");
@@ -900,4 +890,6 @@ app.get('/topMovie', function(req, res){
 
 /* ********************************* DEFINIZIONE DELLA PORTA ****************************************** */
 
-app.listen(port);
+// app.listen(port);
+
+server.listen(port);

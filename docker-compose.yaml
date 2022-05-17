@@ -1,20 +1,6 @@
 version: '3'
 
 services:
-    nginx:
-        image: "nginx:latest"
-        volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf
-            - ./certs:/etc/nginx/certs
-        links:
-            - nodejs:nodejs
-        depends_on:
-            - nodejs
-        ports:
-            - "8080:80"
-            - "8083:443"
-        networks:
-            - app-network
 
     couchdb:
         image: "couchdb"
@@ -33,7 +19,6 @@ services:
         build: "./src"
         ports:
             - "3000:3000"
-            - "9998:9998"
         depends_on:
             - couchdb
         links:
