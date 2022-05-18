@@ -873,6 +873,9 @@ app.get("/results_title", function(req,res){
               }
             });
           }
+          else{
+            res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
+          }
         }
         else{
           res.send("Il film cercato non esiste...");
