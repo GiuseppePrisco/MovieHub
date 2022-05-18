@@ -52,8 +52,11 @@
                             <div class="row text-center">
                               <div class="col">
                                 <%if (id_utente!=undefined){%>
-                                    <button class="heart-button" id="heart-button" onclick='gestisciDB("<%=id_utente%>", "<%=title%>")'>Aggiungi ai preferiti <i class='fa fa-heart-o'></i></button>
-                                <%} else{%>
+                                    <% if (added_to_favourites==false){ %>
+                                        <button class="heart-button" id="heart-button" onclick='gestisciDB("<%=id_utente%>", "<%=title%>")'>Aggiungi ai preferiti <i class='fa fa-heart-o'></i></button>
+                                    <%} else{%>
+                                        <button class="heart-button" id="heart-button" onclick='gestisciDB("<%=id_utente%>", "<%=title%>")'>Aggiunto <i class='fa fa-heart'></i></button>
+                                <%}} else{%>
                                     <button disabled style="opacity: 0.5; cursor: not-allowed;" class="heart-button" id="heart-button-d">Aggiungi ai preferiti <i class='fa fa-heart-o'></i></button>
                                 <%}%>
                                 </div>
