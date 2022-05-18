@@ -572,6 +572,47 @@ app.post('/add_event', function(req, res) {
 
 /* ************************************** PROFILO ********************************************* */
 
+app.post('/eliminaPreferiti', function(req,res){
+  var id_utente = req.query.id;
+  var title = req.query.title;
+  var info_utente;
+  request({
+    url: 'http://admin:admin@couchdb:5984/users/'+id_utente.toString(),
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json;charset=UTF-8'
+    },
+  }, function(error, response, body){
+    if (error){
+      console.log(error);
+    }
+    else{
+      info_utente = JSON.parse(body);
+      for (var h=0; h<info_utente.my_list.length; h++){
+        //scandisce la lista dei film preferiti e quando trova "title" lo elimina dalla lista
+        if (info_utente.my_list[h]==title){
+          info_utente.my_list.splice(h,1);
+        }
+      }
+      request({
+        url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify(info_utente),
+      }, function(error, response, body){
+        if (error){
+          console.log(error);
+        }
+        else{
+          res.send("true");
+        }
+      });
+    }
+  });
+});
+
 app.post('/aggiungiPreferiti', function(req, res){
   var id_utente = req.query.id;
   var title = req.query.title;
@@ -584,13 +625,11 @@ app.post('/aggiungiPreferiti', function(req, res){
     },
   }, function(error, response, body){
     if (error){
-      console.log("Error:");
       console.log(error);
     }
     else{
       info_utente = JSON.parse(body);
       info_utente.my_list.push(title);
-      console.log(info_utente);
       request({
         url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
         method: 'PUT',
@@ -599,14 +638,10 @@ app.post('/aggiungiPreferiti', function(req, res){
         },
         body: JSON.stringify(info_utente),
       }, function(error, response, body){
-        console.log(info_utente);
-        console.log("Response 2:");
         if (error){
-          console.log("Error 2:");
           console.log(error);
         }
         else{
-          console.log(body);
           res.send("true");
         }
       });
