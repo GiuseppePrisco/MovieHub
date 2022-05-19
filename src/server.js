@@ -797,6 +797,7 @@ app.get("/results_topten", function(req, res){
     else{
       if (response.statusCode==200){
         var info= JSON.parse(body);
+        added_to_favourites=false;
         if (info.results.length>=0){
           var option = {
             url: 'https://api.themoviedb.org/3/movie/'+info.results[0].id+'?api_key='+process.env.FILM_KEY+'&language=it-IT',
@@ -809,10 +810,37 @@ app.get("/results_topten", function(req, res){
             else {
               if (response.statusCode == 200) {
                 var info = JSON.parse(body);
+                id_utente = req.session.utente;
                 if (info!=undefined){
-                  console.log(req.session.utente);
-                  id_utente = req.session.utente;
-                  res.render("results_title", {info:info, connected:connected, id_utente: id_utente});   
+                  movie_name=info.original_title;
+                  if (req.session.utente!=undefined){
+                    request({
+                      url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
+                      method: 'GET',
+                      headers: {
+                        'content-type': 'application/json'
+                      },
+                    }, function(error, response, body){
+                      if (error){
+                        console.log(error);
+                      }
+                      else{
+                        console.log("sono quii");
+                        info_p = JSON.parse(body);
+                        console.log(info_p);
+                        for (var h=0; h<info_p.my_list.length; h++){
+                          if (info_p.my_list[h]==movie_name){
+                            added_to_favourites=true;
+                          }
+                        }
+                        console.log(added_to_favourites);
+                        res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
+                      }
+                    });
+                  }
+                  else{
+                    res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
+                  }
                 }
                 else{
                   res.send("Il film cercato non esiste...");
@@ -867,7 +895,6 @@ app.get("/results_title", function(req,res){
                     added_to_favourites=true;
                   }
                 }
-                console.log("AAA");
                 console.log(added_to_favourites);
                 res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
               }

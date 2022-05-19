@@ -14,8 +14,7 @@ function eliminaPreferiti(id_utente, title){
     xhttp.onreadystatechange = function(){
         if (this.readyState == 4 && this.status == 200){
             if (this.responseText == "true"){
-                alert("Chiamata Ajax riuscita!");
-                alert(JSON.stringify(body));
+                alert("Film rimosso dai preferiti!");
                 aggiornaButton(); 
             }else{
                 alert("Chiamata fallita");
@@ -34,8 +33,7 @@ function aggiungiPreferiti(id_utente, title){
     xhttp.onreadystatechange = function(){
         if (this.readyState == 4 && this.status == 200){
             if (this.responseText == "true"){
-                alert("Chiamata Ajax riuscita!");
-                alert(JSON.stringify(body));
+                alert("Film aggiunto ai preferiti!");
                 aggiornaButton(); 
             }else{
                 alert("Chiamata fallita");
