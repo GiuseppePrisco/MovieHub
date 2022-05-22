@@ -47,3 +47,40 @@
     transition-duration: 0.2s;
     height: 100px;
 }
+
+/* custom scrollbar */
+.film-external-card ::-webkit-scrollbar {
+    width: 8px;
+}
+  
+/* Track */
+.film-external-card ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px transparent; 
+    border-radius: 100px;
+}
+   
+/* Handle */
+.film-external-card ::-webkit-scrollbar-thumb {
+    background: darkred; 
+    border-radius: 10px;
+}
+  
+/* Handle on hover */
+.film-external-card ::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+}
+
+/* custom scrollbar-on hover*/
+.film-external-card:hover ::-webkit-scrollbar {
+    width: 12px;
+}
+   
+/* Handle */
+.film-external-card:hover ::-webkit-scrollbar-thumb {
+    background: rgb(130, 130, 130);
+}
+  
+/* Handle on hover */
+.film-external-card:hover ::-webkit-scrollbar-thumb:hover {
+    background: rgb(100, 100, 100); 
+}
