@@ -115,10 +115,14 @@
                 <div class="col-dx">
                     <br>
                     <h5>I film che ti piacciono:</h5>
+                    <br>
                     <ul style="text-align:left;">
                     <% for (var i=0; i<info_utente.my_list.length; i++){ %>
-                        <li><%= info_utente.my_list[i]%></li> 
-                        <!-- aggiungere bottone a destra per rimuovere dai mi piace -->
+                        <li>
+                            <%= info_utente.my_list[i]%>
+                            <button class="delete-btn" onclick='javascript:rimuovi("<%=info_utente.id%>","<%=info_utente.my_list[i]%>")'><i class='bi bi-trash3'></i></button>
+                            <br><br>
+                        </li> 
                     <%}%>
                     </ul>
                     
@@ -128,6 +132,17 @@
             <%}%>
         </div>
     </div>
+    <script type="text/javascript">
+        function rimuovi(id_utente, title){
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", '/eliminaPreferiti?id='+id_utente.toString()+"&title="+ title, true);
+            xhttp.send();
+            setTimeout(reload,300);
+        }
+        function reload(){
+            window.location.reload();
+        }
+    </script>
 </body>
 <%}%>
 </html>

@@ -56,9 +56,11 @@ body {
 .my-navbar button{
     background-color: rgb(74, 0, 0);
     float: left;
+    position: relative;
     display: block;
     border-style: solid;
     border-color: rgb(74, 0, 0);
+    border-width: 3px;
     border-radius: 5px;
     color: white;
     padding: 10px 15px;

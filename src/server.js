@@ -159,7 +159,6 @@ app.get('/registrazione', function(req, res){
                 req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
                 connected = true;
                 res.render('index', {connected:connected});
-                //res.redirect('/home'); // settare il fatto che l'utente è connesso!
                 return;
               }
             }

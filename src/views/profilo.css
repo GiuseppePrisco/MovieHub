@@ -32,3 +32,24 @@
 .col-sx{
     grid-column: 1;
 }
+
+.delete-btn{
+    /* margin-left: 50px; */
+    background-color: rgb(195, 195, 195);
+    /* float: left;
+    display: block; */
+    border-style: solid;
+    border-color: rgba(195, 195, 195, 0);
+    border-radius: 5px;
+    border-width: 3px;
+    color: rgb(0, 0, 0);
+    justify-content: center;
+    position: relative;
+    float: right;
+}
+.delete-btn:hover{
+    background-color: rgba(255, 255, 255, 0); 
+    color: rgb(176, 0, 0);
+    border-color: rgb(176, 0, 0);
+    font-weight: bold; 
+}
