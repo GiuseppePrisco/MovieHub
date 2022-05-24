@@ -50,7 +50,7 @@ function aggiungiPreferiti(id_utente, title){
 function aggiornaButton(){
     var e= document.getElementById("heart-button");
     if (e.innerHTML=='Aggiungi ai preferiti <i class="fa fa-heart-o"></i>'){
-        e.innerHTML='Aggiunto! <i class="fa fa-heart"></i>';
+        e.innerHTML='Rimuovi dai preferiti <i class="bi bi-trash3"></i>';
     }
     else{
         e.innerHTML='Aggiungi ai preferiti <i class="fa fa-heart-o"></i>'

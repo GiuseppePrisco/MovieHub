@@ -121,7 +121,6 @@ app.get('/registrazione', function(req, res){
       console.log(error);
     }
     var info = JSON.parse(body);
-    console.log(info);
       /* 
         QUESTE INFO SONO COSI' FATTE:
         {
@@ -158,6 +157,7 @@ app.get('/registrazione', function(req, res){
               if(data.rows[i].id === id){  
                 req.session.utente = id; // imposto l'utente di questa sessione in modo da poter accedere al profilo dopo
                 connected = true;
+                console.log("Utente "+id+", "+info.name+" già registrato");
                 res.render('index', {connected:connected});
                 return;
               }
@@ -200,23 +200,39 @@ app.get('/registrazione', function(req, res){
 
 app.get('/delete_account', function(req, res){
   if (req.session.utente!=undefined){
+    id = req.session.utente 
     request({
-      url: 'http://admin:admin@couchdb:5984/users/'+req.session.utente,
-      method: 'DELETE',
+      url: 'http://admin:admin@couchdb:5984/users/'+id,
+      method: 'GET',
       headers: {
         'content-type': 'application/json'
       },
     }, function(error, response, body){
       if (error){
         console.log(error);
+        res.send("ERRORE");
+      }else{
+        rev = (JSON.parse(body))._rev;
+        request({
+          url: 'http://admin:admin@couchdb:5984/users/'+id+'?rev='+rev,
+          method: 'DELETE',
+          headers: {
+            'content-type': 'application/json'
+          },
+        }, function(error, response, body){
+          if (error){
+            console.log(error);
+            res.send("ERRORE");
+          }
+          else{
+            req.session.destroy();
+            connected = false;
+            res.render('index', {connected:connected});
+            return;
+          }
+        });
       }
-      else{
-        req.session.destroy();
-        connected = false;
-        res.render('index', {connected:connected});
-        res.redirect('/');
-      }
-    });
+    });  
   }
 });
 
@@ -824,7 +840,6 @@ app.get("/results_topten", function(req, res){
                         console.log(error);
                       }
                       else{
-                        console.log("sono quii");
                         info_p = JSON.parse(body);
                         console.log(info_p);
                         for (var h=0; h<info_p.my_list.length; h++){

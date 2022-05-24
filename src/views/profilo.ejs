@@ -101,7 +101,13 @@
                         Nazionalità: <%= info_utente.locale%>
                     </p>
                 </div>
-                <!-- aggiungere tasto per eliminare account -->
+                <div class="settings">
+                    <button class="settings-btn"><i class="bi bi-gear"></i></button>
+                    <div class="settings-content">
+                        <a href="https://localhost:3000/delete_account?<%=info_utente.id%>">Delete account</a>
+                    </div>
+                </div>
+                <!-- Bottone per rimuovere account -->
             </div>
             <br>
             <div class="colonne">
