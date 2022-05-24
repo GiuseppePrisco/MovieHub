@@ -512,7 +512,8 @@ app.get('/delete_calendar', function(req, res){
 });
 
 app.get('/add_event', function(req, res) {
-  res.render('add_event');
+  title = req.query.title;
+  res.render('add_event',  {title:title});
 });
 
 app.post('/add_event', function(req, res) {
@@ -901,7 +902,6 @@ app.get("/results_title", function(req,res){
                 console.log(error);
               }
               else{
-                console.log("sono quii");
                 info_p = JSON.parse(body);
                 console.log(info_p);
                 for (var h=0; h<info_p.my_list.length; h++){
@@ -910,7 +910,7 @@ app.get("/results_title", function(req,res){
                   }
                 }
                 console.log(added_to_favourites);
-                res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
+                res.render("results_title", {info:info, info_p:info_p, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
               }
             });
           }

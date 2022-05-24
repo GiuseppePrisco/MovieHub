@@ -36,17 +36,6 @@
             <br>
              <% if (info_utente!=""){ %>
             <!-- <table class="main-table">
-                <tr>
-                    <td colspan="1">
-                        <h3><%= info_utente.name %></h3>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <img style="border-radius: 50%;" src=<%= info_utente.picture %>>
-                    </td>
-                </tr>
-                <tr>
                 <% if (info_utente.calendar!=""){ %>
                     <td rowspan="3"> -->
                         <!-- per rendere il calendario più completo se ne possono aggiungere altri pubblici -->
@@ -78,16 +67,6 @@
                         </a>   
                     </td>
                 </tr>
-                <tr>
-                    <td> -->
-                        <!-- <h5> -->
-                            <!-- Delete the Calendar if it exists<br><br> -->
-                        <!-- </h5> -->
-                        <!-- <a href="/delete_calendar">
-                            <button>Delete</button>
-                        </a>   
-                    </td>
-                </tr>
 
             </table> -->
 
@@ -102,12 +81,11 @@
                     </p>
                 </div>
                 <div class="settings">
-                    <button class="settings-btn"><i class="bi bi-gear"></i></button>
+                    <button class="settings-btn"><i class="bi bi-gear"></i>  <i style="font-size:14px;" class="bi bi-caret-down-fill"></i></button>
                     <div class="settings-content">
                         <a href="https://localhost:3000/delete_account?<%=info_utente.id%>">Delete account</a>
                     </div>
                 </div>
-                <!-- Bottone per rimuovere account -->
             </div>
             <br>
             <div class="colonne">
@@ -115,8 +93,18 @@
                     <br>
                     <h5>Ecco il tuo calendario</h5>
                     <br>
-                    <!-- aggiungere bottoni per interagire con calendario -->
-                    <iframe src="https://calendar.google.com/calendar/embed?src=<%= info_utente.calendar %>&src=it.italian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FRome" style="border: 0" width="90%" height="400" frameborder="0" scrolling="no"></iframe>
+                    <!-- aggiungere bottoni per interagire con calendario --> 
+                    <% if (info_utente.calendar!=""){ %>
+                        <a href="/add_calendar"><button disabled class="calendario"><i class="bi bi-plus"></i></button></a>
+                        <a href="/delete_calendar"><button class="calendario"><i class="bi bi-dash"></i></button></a>
+                        <br><br>  
+                        <iframe src="https://calendar.google.com/calendar/embed?src=<%= info_utente.calendar %>&src=it.italian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FRome" style="border: 0" width="90%" height="400" frameborder="0" scrolling="no"></iframe>
+                    <% } else { %>
+                        <a href="/add_calendar"><button class="calendario"><i class="bi bi-plus"></i></button></a>
+                        <a href="/delete_calendar"><button disabled class="calendario"><i class="bi bi-dash"></i></button></a>
+                        <br><br>  
+                        <p style="font-size: 15px">Crea il tuo calendario</p>
+                    <% } %>
                 </div>
                 <div class="col-dx">
                     <br>

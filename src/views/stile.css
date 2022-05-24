@@ -125,26 +125,47 @@ body {
 .heart-button {
     margin-top: 10px;
     background-color: rgb(176, 0, 0);
-    /* float: left;
-    display: block; */
     border-style: solid;
     border-color: rgb(176, 0, 0);
+    width:230px;
     border-radius: 5px;
     color: white;
     padding: 10px 15px;
     justify-content: center;
 }
-
 .heart-button:hover{
-    /* background-color: rgba(255, 255, 255, 0); */
-    
     background-color: rgb(255, 255, 255);
     color: rgb(74, 0, 0);
     font-weight: bold;
-    /* float: left;
-    display: block; */
     border-width: 3px;
     padding: 10px 15px;
+}
+.heart-button:disabled{
+    opacity: 0.5; 
+    cursor: not-allowed;
+}
+
+.calendar-button {
+    margin-top: 10px;
+    background-color: rgb(110, 0, 0);
+    width:230px;
+    border-style: solid;
+    border-color: rgb(110, 0, 0);
+    border-radius: 5px;
+    color: white;
+    padding: 10px 15px;
+    justify-content: center;
+}
+.calendar-button:hover{
+    background-color: rgb(255, 255, 255);
+    color: rgb(74, 0, 0);
+    font-weight: bold;
+    border-width: 3px;
+    padding: 10px 15px;
+}
+.calendar-button:disabled{
+    opacity: 0.5; 
+    cursor: not-allowed;
 }
 
 /* Grafica della chat-bot: */

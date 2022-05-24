@@ -13,6 +13,7 @@
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
+            <br>
             <h3>Compila i seguenti campi per aggiungere l'evento al tuo Calendar!</h3>
             
 
@@ -20,11 +21,11 @@
                 
                 <div class="col-md-6">
                   <label for="inputSummary" class="form-label">Summary</label>
-                  <input type="text" class="form-control" id="inputSummary" placeholder="The Event Summary" name="summary" required>
+                  <input type="text" class="form-control" id="inputSummary" value="Vedere il film <%=title%>" readonly="readonly" name="summary" required>
                 </div>
                 <div class="col-12">
                   <label for="inputDescription" class="form-label">Description</label>
-                  <input type="text" class="form-control" id="inputDescription" placeholder="The event description" name="description" required>
+                  <input type="text" class="form-control" id="inputDescription" placeholder="The event description" name="description">
                 </div>
                 <div class="col-md-2">
                     <label for="inputStartDate" class="form-label">Start Date</label>
@@ -53,7 +54,7 @@
                 </div>
                 
                 <div class="col-12">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary" style="background-color: rgb(176,0,0); border:0;">Submit</button>
                 </div>
               </form>
 

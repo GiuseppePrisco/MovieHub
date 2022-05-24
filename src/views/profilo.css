@@ -75,10 +75,7 @@
 }
 
 .delete-btn{
-    /* margin-left: 50px; */
     background-color: rgb(195, 195, 195);
-    /* float: left;
-    display: block; */
     border-style: solid;
     border-color: rgba(195, 195, 195, 0);
     border-radius: 5px;
@@ -93,5 +90,21 @@
     color: rgb(176, 0, 0);
     border-color: rgb(176, 0, 0);
     font-weight: bold; 
+}
+
+.calendario{
+    border-radius: 50%;
+    border: none;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    background-color: rgb(193, 82, 82);
+    color:white;
+}
+.calendario:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
