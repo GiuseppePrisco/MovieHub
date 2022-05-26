@@ -34,10 +34,6 @@ app.use(function(req,res,next) {
   next();   
 }); 
 
-app.use(function(req, res, next){
-  res.status(404).redirect('/error?cod_status='+404);
-});
-
 
 /* ********************************* FINE DIPENDENZE ****************************************** */
 
@@ -976,5 +972,9 @@ app.get('/topMovie', function(req, res){
 
 
 /* ********************************* DEFINIZIONE DELLA PORTA ****************************************** */
+
+app.use(function(req, res, next){
+  res.status(404).redirect('/error?cod_status='+404);
+});
 
 server.listen(port);

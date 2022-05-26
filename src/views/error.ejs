@@ -36,11 +36,23 @@
 
     <div class="main">
         <div class="main-box soft-shadow">
+            <br>
+            <h1 style="font-size: 80px;">
+                Ops!
+            </h1>
+            
+            <p style="opacity: 0.6;">C'è stato un problema</p>
+            <br><br>
+            <p style="font-size:30px;">
             <%if (cod_status!=200){%>
-                ERRORE: <%=cod_status%>
+                <%=cod_status%>: Errore
             <%} if (stringa!=undefined){%>
                 <%=stringa%>
             <%}%>
+            </p>
+            <br>
+            <img style="max-width: 100%; max-height: 100%;" src="images/per_errore.jpg">
+            <br><br>
         </div>
     </div>
 </body>
