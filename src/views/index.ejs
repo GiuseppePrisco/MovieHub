@@ -13,9 +13,7 @@
 <body>
     <div class="my-navbar">
         <h3>
-            <!-- <font color="white"> -->
-                MovieHub
-            <!-- </font> -->
+            MovieHub
         </h3>
         <div class="my-navbar-menù">
             <a href="/">Home</a>
@@ -63,7 +61,6 @@
                 </div>
             </form>
             
-            <!-- <br> -->
             <br>
             <br>
             <h3>Accedi con Google per iniziare</h3>
@@ -76,7 +73,7 @@
                 <button class="search-button soft-shadow"><img width="25px" heigth="25px" style="margin-bottom: 5px; margin-right: 5px" src="https://static.cdnlogo.com/logos/g/35/google-icon.svg">Logout</button>      
             </form>
             <%}%>
-            <!-- <br> -->
+
             <br>
             <br>
             <br>
@@ -111,12 +108,15 @@
         </div>
         <script type="text/javascript">
             var bottone = document.getElementById('chat-btn');
-            var chat = document.getElementById('cont-chat')
+            var chat = document.getElementById('cont-chat');
+            
+            var websock;
             function mostra(){
                 bottone.style.display="none";
                 chat.style.display="flex";
 
                 const ws=new WebSocket('wss://localhost:3000/chat');
+                websock=ws;
 
                 ws.onopen=function(){ }
 
@@ -154,6 +154,7 @@
                 chat.style.display="none";
                 messages = document.getElementById('messages');
                 messages.innerHTML="";
+                websock.close();
             }
             
         </script>

@@ -34,42 +34,7 @@
     <div class="main">
         <div class="main-box soft-shadow">
             <br>
-             <% if (info_utente!=""){ %>
-            <!-- <table class="main-table">
-                <% if (info_utente.calendar!=""){ %>
-                    <td rowspan="3"> -->
-                        <!-- per rendere il calendario più completo se ne possono aggiungere altri pubblici -->
-                        <!-- <iframe src="https://calendar.google.com/calendar/embed?src=<%= info_utente.calendar %>&src=it.italian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FRome" style="border: 0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
-                    </td>
-                <% } else { %>
-                    <td rowspan="3">
-                        Non hai ancora creato un calendar!
-                    </td>
-                <%}%>
-                <td> -->
-                    <!-- <h5> -->
-                        <!-- Create or Replace Calendar<br><br> -->
-                    <!-- </h5> -->
-                    <!-- <a href="/add_calendar">
-                        <button>Calendar</button>
-                    </a>
-                </td>
-                </tr>
-                <tr>
-                    <td>
-                        <br> -->
-                        <!-- <h5> -->
-                            <!-- Add a new Event to Calendar if it exists, <br>
-                            otherwise a new calendar will be created<br><br> -->
-                        <!-- </h5> -->
-                        <!-- <a href="/add_event">
-                            <button>Event</button>
-                        </a>   
-                    </td>
-                </tr>
-
-            </table> -->
-
+            <% if (info_utente!=""){ %>
             <div class="barra-princ">
                 <img style="border-radius: 50%; height:100px; width:100px" src=<%= info_utente.picture %>> 
                 <div class=barra-princ-nome>
@@ -92,8 +57,7 @@
                 <div class="col-six">
                     <br>
                     <h5>Ecco il tuo calendario</h5>
-                    <br>
-                    <!-- aggiungere bottoni per interagire con calendario --> 
+                    <br> 
                     <% if (info_utente.calendar!=""){ %>
                         <a href="/add_calendar"><button disabled class="calendario"><i class="bi bi-plus"></i></button></a>
                         <a href="/delete_calendar"><button class="calendario"><i class="bi bi-dash"></i></button></a>

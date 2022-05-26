@@ -13,9 +13,7 @@
 <body>
     <div class="my-navbar">
         <h3>
-            <!-- <font color="white"> -->
-                MovieHub
-            <!-- </font> -->
+            MovieHub
         </h3>
         <div class="my-navbar-menù">
             <a href="/">Home</a>
@@ -39,20 +37,15 @@
             <h1>Ecco la Top 10 dei film più visti su Netflix</h1>
             <div class="film-box">
                 <% if(info.length>0){ %>
-                    <!-- <ul> -->
                     <% for(var i=0;i < info.length; i++) {%>
-                        <!-- <li> -->
-                            <div class="film-external-card">
-                                <a href="https://localhost:3000/results_topten?name=<%= info[i].name%>" style='text-decoration: none;'>
-                                    <button class="film-internal-card soft-shadow">
-                                        <%= info[i].name%>
-                                    </button>
-                                </a>
-                            </div>
-                        
-                        <!-- </li> -->
+                        <div class="film-external-card">
+                            <a href="https://localhost:3000/results_topten?name=<%= info[i].name%>" style='text-decoration: none;'>
+                                <button class="film-internal-card soft-shadow">
+                                    <%= info[i].name%>
+                                </button>
+                            </a>
+                        </div>
                     <%}%>
-                    <!-- </ul> -->
                 <%}%>
             <%}%>
         </div>

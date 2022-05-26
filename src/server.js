@@ -8,6 +8,7 @@ var request = require('request');
 const WebSocket = require('ws');
 const https = require('https')
 const { info } = require('console');
+var { connected } = require('process');
 require('dotenv').config();
 
 
@@ -24,16 +25,18 @@ app.use(expressSession({
   secret: 'MovieHub',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 24 * 60 * 60 * 1000 } // durata di 24 ore
+  cookie: { maxAge: 24 * 60 * 60 * 1000, secure: true } // durata di 24 ore + sicurezza
   // Ha valore cookie di default: { path: '/', httpOnly: true, secure: false, maxAge: null }
-  // se usiamo https dobbiamo decommentare: 
-  // cookie: { secure: true }
 }));
 
 app.use(function(req,res,next) {  
   res.locals.session = req.session;
   next();   
 }); 
+
+app.use(function(req, res, next){
+  res.status(404).redirect('/error?cod_status='+404);
+});
 
 
 /* ********************************* FINE DIPENDENZE ****************************************** */
@@ -58,6 +61,12 @@ app.get('/', function(req, res) {
   res.render('index',{connected:connected});
 });
 
+app.get('/error', function(req, res){
+  cod_status = req.query.cod_status;
+  stringa = req.query.stringa;
+  res.render('error', {cod_status:cod_status, connected:connected, stringa:stringa});
+});
+
 /* *********************************** GOOGLE OAUTH ******************************************* */
 
 app.get('/login', function(req, res){
@@ -74,7 +83,8 @@ app.get('/googlecallback', function(req, res){
     res.redirect('gtoken?code='+req.query.code)
   }
   else{
-    res.send('Errore durante la richiesta del code di Google'); // da cambiare
+    cod_status = 404;
+    res.redirect('/error?cod_status='+cod_status);
   }
 });
 
@@ -109,7 +119,8 @@ app.get('/registrazione', function(req, res){
 
   if(req.session.google_token==undefined){ 
     //siamo qui solo se dalla barra si digita /registrazione
-    return res.send("ERRORE!"); // invece di questo redirect a una pagina d'errore
+    cod_status = 404;
+    return res.redirect('/error?cod_status='+cod_status);
   }
   
   var google_token = req.session.google_token;
@@ -198,6 +209,50 @@ app.get('/registrazione', function(req, res){
   });
 });
 
+/* ******************************** FINE GOOGLE OAUTH ***************************************** */
+
+/* ************************************** PROFILO ********************************************* */
+
+app.get('/profilo', function(req, res){
+  if (req.session.utente!=undefined){
+    request({
+      url: 'http://admin:admin@couchdb:5984/users/'+req.session.utente,
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      },
+    }, function(error, response, body){
+      if (error){
+        console.log(error);
+      }
+      else{
+        info_p = JSON.parse(body);
+        if (info_p.error!=undefined){
+          res.send(info_p.error);
+        }
+        var info_utente = info_p;
+        // console.log(info_utente);
+        res.render('profilo', {info_utente:info_utente, connected:connected});
+      }
+    });
+  }
+  else{
+    res.redirect('/');
+  }
+});
+
+app.get('/logout', function(req, res){
+  if (req.session.utente!=undefined){
+    req.session.destroy();
+    connected=false;
+    res.render('index', {connected:connected});
+  }
+  else{
+    connected = false;
+    res.render('index', {connected:connected});
+  }
+});
+
 app.get('/delete_account', function(req, res){
   if (req.session.utente!=undefined){
     id = req.session.utente 
@@ -234,21 +289,92 @@ app.get('/delete_account', function(req, res){
       }
     });  
   }
-});
-
-
-/* ******************************** FINE GOOGLE OAUTH ***************************************** */
-
-/* ********************************  GOOGLE CALENDAR ***************************************** */
-//al momento non sto utilizzando /calendar
-app.get('/calendar', function(req, res){
-  if (req.session.google_token!=undefined){
-    res.send("<br><br><button onclick='window.location.href=\"/add_calendar\"'>Add a new calendar</button>"+
-            "<br><br><button onclick='window.location.href=\"/get_calendar\"'>Get calendar</button>"+
-            "<br><br><button onclick='window.location.href=\"/delete_calendar\"'>Delete the calendar</button>"+
-            "<br><br><button onclick='window.location.href=\"/add_event\"'>Add an event to the calendar</button>");
+  else{
+    res.redirect('/');
   }
 });
+
+app.post('/eliminaPreferiti', function(req,res){
+  var id_utente = req.query.id;
+  var title = req.query.title;
+  var info_utente;
+  request({
+    url: 'http://admin:admin@couchdb:5984/users/'+id_utente.toString(),
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json;charset=UTF-8'
+    },
+  }, function(error, response, body){
+    if (error){
+      console.log(error);
+    }
+    else{
+      info_utente = JSON.parse(body);
+      for (var h=0; h<info_utente.my_list.length; h++){
+        //scandisce la lista dei film preferiti e quando trova "title" lo elimina dalla lista
+        if (info_utente.my_list[h]==title){
+          info_utente.my_list.splice(h,1);
+        }
+      }
+      request({
+        url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify(info_utente),
+      }, function(error, response, body){
+        if (error){
+          console.log(error);
+        }
+        else{
+          res.send("true");
+        }
+      });
+    }
+  });
+});
+
+app.post('/aggiungiPreferiti', function(req, res){
+  var id_utente = req.query.id;
+  var title = req.query.title;
+  var info_utente;
+  request({
+    url: 'http://admin:admin@couchdb:5984/users/'+id_utente.toString(),
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json;charset=UTF-8'
+    },
+  }, function(error, response, body){
+    if (error){
+      console.log(error);
+    }
+    else{
+      info_utente = JSON.parse(body);
+      info_utente.my_list.push(title);
+      request({
+        url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify(info_utente),
+      }, function(error, response, body){
+        if (error){
+          console.log(error);
+        }
+        else{
+          res.send("true");
+        }
+      });
+    }
+  });
+});
+ 
+/* *********************************** FINE PROFILO ******************************************* */
+
+
+/* ********************************  GOOGLE CALENDAR ***************************************** */
 
 app.get('/add_calendar', function(req, res){
   //check if a calendar exists
@@ -274,12 +400,12 @@ app.get('/add_calendar', function(req, res){
           }
         };
         request(options, function callback(error, response, body) {
-        if (!error) {
-          console.log("Removed old calendar");
+          if (!error) {
+            console.log("Removed old calendar");
           }
-        else {
-          console.log(error);
-        }
+          else {
+            console.log(error);
+          }
         });
       }
       else {
@@ -305,7 +431,6 @@ app.get('/add_calendar', function(req, res){
           req.session.calendar_id = info.id;
           console.log("id of the calendar just created");
           console.log(req.session.calendar_id);
-          // console.log(info.id);
         
           //adding the reader role to calendar
           var data = { 
@@ -339,7 +464,6 @@ app.get('/add_calendar', function(req, res){
                   var data = JSON.parse(body);
                   console.log("info of user, including revision code");
                   console.log(data);
-                  // req.session.revision = data._rev;
                 
                   //adding the calendar id to database
                   var body1 = {
@@ -367,7 +491,6 @@ app.get('/add_calendar', function(req, res){
                       console.log("modified entry in database, logging results of modification");
                       console.log(data);
                       console.log("aggiunto calendar a database");
-                      // res.redirect('/');
                       res.redirect('/profilo');
                     }
                     else{
@@ -386,7 +509,8 @@ app.get('/add_calendar', function(req, res){
           });
         }
         else {
-          console.log(error);
+          cod_status = response.statusCode;
+          res.redirect('/error?cod_status='+cod_status);
         }
       });
     }
@@ -394,28 +518,6 @@ app.get('/add_calendar', function(req, res){
       console.log(error);
     }
   });
-});
-
-//al momento non sto utilizzando /get_calendar
-app.get('/get_calendar', function(req, res){
-  var options = {
-    url: 'https://www.googleapis.com/calendar/v3/calendars/'+req.session.calendar_id,
-    method: 'GET',
-    headers: {
-      'Authorization': 'Bearer '+req.session.google_token
-    }
-  };
-  request(options, function callback(error, response, body) {
-  if (!error && response.statusCode == 200) {
-    var info = JSON.parse(body);
-    console.log(info);
-    res.redirect('/calendar');
-    }
-  else {
-    console.log(error);
-  }
-  });
-
 });
 
 app.get('/delete_calendar', function(req, res){
@@ -537,8 +639,7 @@ app.post('/add_event', function(req, res) {
         var start_date = req.body.start_date;
         var end_date = req.body.end_date;
         var color = req.body.color;
-        // console.log(start_date);
-        // console.log(color);
+        
         var body1 = { 
           "summary": summary,
           "description": description,
@@ -585,126 +686,6 @@ app.post('/add_event', function(req, res) {
 
 
 /* ******************************** FINE GOOGLE CALENDAR ***************************************** */
-
-/* ************************************** PROFILO ********************************************* */
-
-app.post('/eliminaPreferiti', function(req,res){
-  var id_utente = req.query.id;
-  var title = req.query.title;
-  var info_utente;
-  request({
-    url: 'http://admin:admin@couchdb:5984/users/'+id_utente.toString(),
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json;charset=UTF-8'
-    },
-  }, function(error, response, body){
-    if (error){
-      console.log(error);
-    }
-    else{
-      info_utente = JSON.parse(body);
-      for (var h=0; h<info_utente.my_list.length; h++){
-        //scandisce la lista dei film preferiti e quando trova "title" lo elimina dalla lista
-        if (info_utente.my_list[h]==title){
-          info_utente.my_list.splice(h,1);
-        }
-      }
-      request({
-        url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
-        method: 'PUT',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8'
-        },
-        body: JSON.stringify(info_utente),
-      }, function(error, response, body){
-        if (error){
-          console.log(error);
-        }
-        else{
-          res.send("true");
-        }
-      });
-    }
-  });
-});
-
-app.post('/aggiungiPreferiti', function(req, res){
-  var id_utente = req.query.id;
-  var title = req.query.title;
-  var info_utente;
-  request({
-    url: 'http://admin:admin@couchdb:5984/users/'+id_utente.toString(),
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json;charset=UTF-8'
-    },
-  }, function(error, response, body){
-    if (error){
-      console.log(error);
-    }
-    else{
-      info_utente = JSON.parse(body);
-      info_utente.my_list.push(title);
-      request({
-        url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
-        method: 'PUT',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8'
-        },
-        body: JSON.stringify(info_utente),
-      }, function(error, response, body){
-        if (error){
-          console.log(error);
-        }
-        else{
-          res.send("true");
-        }
-      });
-    }
-  });
-    
-});
-
-app.get('/profilo', function(req, res){
-  if (req.session.utente!=undefined){
-    request({
-      url: 'http://admin:admin@couchdb:5984/users/'+req.session.utente,
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json'
-      },
-    }, function(error, response, body){
-      if (error){
-        console.log(error);
-      }
-      else{
-        info_p = JSON.parse(body);
-        var info_utente = info_p;
-        console.log(info_utente);
-        res.render('profilo', {info_utente:info_utente});
-      }
-    });
-  }
-  else{
-    res.redirect('/');
-  }
-});
-
-app.get('/logout', function(req, res){
-  if (req.session.utente!=undefined){
-    req.session.destroy();
-    connected=false;
-    res.render('index', {connected:connected});
-  }
-  else{
-    connected = false;
-    res.render('index', {connected:connected});
-  }
-});
- 
-
-/* *********************************** FINE PROFILO ******************************************* */
 
 /* ************************************* CHAT BOT ********************************************* */
 
@@ -765,6 +746,10 @@ wss.on('connection', function connection(ws) {
             });
           }
         }
+        else{
+          cod_status = response.statusCode;
+          res.redirect('/error?cod_status='+cod_status);
+        }
       }
     });
   });
@@ -791,11 +776,17 @@ app.post('/results_film', function(req, res) {
       if (response.statusCode == 200) {
         var info = JSON.parse(body);
         if (info.results.length>0){
-          res.render("results_film", {info:info});   
+          res.render("results_film", {info:info, connected:connected});   
         }
         else{
-          res.send("Il film cercato non esiste...");
+          cod_status = response.statusCode;
+          stringa="Il film cercato non esiste."
+          res.redirect('/error?cod_status='+cod_status+'&stringa='+stringa);
         }
+      }
+      else{
+        cod_status = response.statusCode;
+        res.redirect('/error?cod_status='+cod_status);
       }
     }
   });
@@ -803,73 +794,91 @@ app.post('/results_film', function(req, res) {
 
 app.get("/results_topten", function(req, res){
   var movie_name=req.query.name;
-  var option = {
-    url: 'https://api.themoviedb.org/3/search/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&query='+movie_name, 
-  }
-  request.get(option, function(error, response, body){
-    if (error){
-      console.log(error);
+  if (movie_name!=undefined){
+    var option = {
+      url: 'https://api.themoviedb.org/3/search/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&query='+movie_name, 
     }
-    else{
-      if (response.statusCode==200){
-        var info= JSON.parse(body);
-        added_to_favourites=false;
-        if (info.results.length>=0){
-          var option = {
-            url: 'https://api.themoviedb.org/3/movie/'+info.results[0].id+'?api_key='+process.env.FILM_KEY+'&language=it-IT',
-          }
-            
-          request.get(option,function(error, response, body){
-            if(error) {
-              console.log(error);
-            } 
-            else {
-              if (response.statusCode == 200) {
-                var info = JSON.parse(body);
-                id_utente = req.session.utente;
-                if (info!=undefined){
-                  movie_name=info.original_title;
-                  if (req.session.utente!=undefined){
-                    request({
-                      url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
-                      method: 'GET',
-                      headers: {
-                        'content-type': 'application/json'
-                      },
-                    }, function(error, response, body){
-                      if (error){
-                        console.log(error);
-                      }
-                      else{
-                        info_p = JSON.parse(body);
-                        console.log(info_p);
-                        for (var h=0; h<info_p.my_list.length; h++){
-                          if (info_p.my_list[h]==movie_name){
-                            added_to_favourites=true;
-                          }
+    request.get(option, function(error, response, body){
+      if (error){
+        console.log(error);
+      }
+      else{
+        if (response.statusCode==200){
+          var info= JSON.parse(body);
+          added_to_favourites=false;
+          if (info.results.length>=0){
+            var option = {
+              url: 'https://api.themoviedb.org/3/movie/'+info.results[0].id+'?api_key='+process.env.FILM_KEY+'&language=it-IT',
+            }
+
+            request.get(option,function(error, response, body){
+              if(error) {
+                console.log(error);
+              } 
+              else {
+                if (response.statusCode == 200) {
+                  var info = JSON.parse(body);
+                  id_utente = req.session.utente;
+                  if (info!=undefined){
+                    movie_name=info.original_title;
+                    if (req.session.utente!=undefined){
+                      request({
+                        url: 'http://admin:admin@couchdb:5984/users/'+id_utente,
+                        method: 'GET',
+                        headers: {
+                          'content-type': 'application/json'
+                        },
+                      }, function(error, response, body){
+                        if (error){
+                          console.log(error);
                         }
-                        console.log(added_to_favourites);
-                        res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
-                      }
-                    });
+                        else{
+                          info_p = JSON.parse(body);
+                          console.log(info_p);
+                          for (var h=0; h<info_p.my_list.length; h++){
+                            if (info_p.my_list[h]==movie_name){
+                              added_to_favourites=true;
+                            }
+                          }
+                          console.log(added_to_favourites);
+                          res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
+                        }
+                      });
+                    }
+                    else{
+                      res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
+                    }
                   }
                   else{
-                    res.render("results_title", {info:info, id_utente: id_utente, connected:connected, added_to_favourites:added_to_favourites}); 
+                    cod_status = response.statusCode;
+                    stringa="Il film cercato non esiste."
+                    res.redirect('/error?cod_status='+cod_status+'&stringa='+stringa);
                   }
                 }
                 else{
-                  res.send("Il film cercato non esiste...");
+                  cod_status = response.statusCode;
+                  res.redirect('/error?cod_status='+cod_status);
                 }
               }
-            }
-          });
+            });
+          }
+          else{
+            cod_status = response.statusCode;
+            stringa="Il film cercato non esiste."
+            res.redirect('/error?cod_status='+cod_status+'&stringa='+stringa);
+          }
         }
         else{
-          res.send("Il film cercato non esiste...");
+          cod_status = response.statusCode;
+          res.redirect('/error?cod_status='+cod_status);
         }
       }
-    }
-  })
+    })
+  }
+  else{
+    cod_status = 404;
+    res.redirect('/error?cod_status='+cod_status);
+  }
 })
 
 app.get("/results_title", function(req,res){
@@ -919,44 +928,17 @@ app.get("/results_title", function(req,res){
           }
         }
         else{
-          res.send("Il film cercato non esiste...");
+          cod_status = response.statusCode;
+          stringa="Il film cercato non esiste."
+          res.redirect('/error?cod_status='+cod_status+'&stringa='+stringa);
         }
+      }
+      else{
+        cod_status = response.statusCode;
+        res.redirect('/error?cod_status='+cod_status);
       }
     }
   });
-});
-
-
-app.post('/cercaTitolo',function(req,res){
-  var titolo = req.body.search; // da mettere nell'html
-  var movie_id="";
-    
-  // per ottenere l'id del film utile per la richiesta delle informazioni del film
-  var option = {
-    url: 'https://api.themoviedb.org/3/search/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&query='+titolo, 
-  }
-    
-  request.get(option,function(error, response, body){
-    if(error) {
-      console.log(error);
-    } 
-    else {
-      if (response.statusCode == 200) {
-        var info = JSON.parse(body);
-        if (info.results.length>0){
-          res.render("results", {info:info});
-        }
-        else{
-          res.send("Il film cercato non esiste...");
-        }
-        //res.redirect(...); <-- a una pagina con l'elenco dei film con quel titolo 
-      }
-      // else{
-      //   res.send(response.statusCode+" "+body); // da modificare 
-      // }
-      // console.log(response.statusCode, body);
-    }
-  }); 
 });
 
 /* **************************************** FINE TMDB ************************************************* */
@@ -980,22 +962,19 @@ app.get('/topMovie', function(req, res){
     else{
       var info = JSON.parse(body);
       if (info.error!=undefined){
-        res.redirect(404, 'Errore');
+        console.log(info.error);
       }
       else{
-        res.render("top_movies", {info:info});
+        res.render("top_movies", {info:info, connected:connected});
         console.log(info);
       }
     }
   });
 })
 
-
 /* ************************************ FINE NETFLIX TOP 10 ********************************************* */
 
 
 /* ********************************* DEFINIZIONE DELLA PORTA ****************************************** */
-
-// app.listen(port);
 
 server.listen(port);

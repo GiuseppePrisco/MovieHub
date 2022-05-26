@@ -13,9 +13,7 @@
 <body>
     <div class="my-navbar">
         <h3>
-            <!-- <font color="white"> -->
-                MovieHub
-            <!-- </font> -->
+            MovieHub
         </h3>
         <div class="my-navbar-menù">
             <a href="/">Home</a>
@@ -40,22 +38,17 @@
             <br>
             <div class="film-box">
                 <% if(info.results.length>0){ %>
-                    <!-- <ul> -->
                     <% for(var i=0;i < info.results.length; i++) {%>
-                        <!-- <li> -->
-                            <div class="film-external-card">
-                                <a href="https://localhost:3000/results_title?id=<%= info.results[i].id%>" style='text-decoration: none;'>
-                                    <button class="film-internal-card soft-shadow">
-                                        <img class="immagine" src="https://image.tmdb.org/t/p/w300/<%=info.results[i].poster_path%>">
-                                        <br><br>
-                                        <%= info.results[i].original_title%>
-                                    </button>
-                                </a>
-                            </div>
-                        
-                        <!-- </li> -->
+                        <div class="film-external-card">
+                            <a href="https://localhost:3000/results_title?id=<%= info.results[i].id%>" style='text-decoration: none;'>
+                                <button class="film-internal-card soft-shadow">
+                                    <img class="immagine" src="https://image.tmdb.org/t/p/w300/<%=info.results[i].poster_path%>">
+                                    <br><br>
+                                    <%= info.results[i].original_title%>
+                                </button>
+                            </a>
+                        </div>
                     <%}%>
-                    <!-- </ul> -->
                 <%}%>
             <%}%>
             </div>
