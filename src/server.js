@@ -67,7 +67,7 @@ app.get('/error', function(req, res){
 
 app.get('/login', function(req, res){
   if (req.session.utente!=undefined){ //se un utente si è già connesso 
-    res.send("Sei già connesso!");
+    res.redirect('/');
   }
   else{
     res.redirect("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=https://localhost:3000/googlecallback&client_id="+process.env.G_CLIENT_ID); 
