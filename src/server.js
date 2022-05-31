@@ -847,7 +847,7 @@ app.get("/results_topten", function(req, res){
                   }
                   else{
                     cod_status = response.statusCode;
-                    stringa="Il film cercato non esiste."
+                    stringa="Il film cercato non esiste.";
                     res.redirect('/error?cod_status='+cod_status+'&stringa='+stringa);
                   }
                 }
