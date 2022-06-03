@@ -11,4 +11,7 @@ jobs:
       - run: npm install -g mocha
       - run: npm install --prefix ./src
       - run: docker-compose up -d
+      - uses: jakejarvis/wait-action@master
+        with:
+          time: '180s'
       - run: npm test --prefix ./src
