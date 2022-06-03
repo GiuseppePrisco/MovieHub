@@ -10,5 +10,5 @@ jobs:
       - uses: actions/setup-node@v2
       - run: npm install -g mocha
       - run: npm install --prefix ./src
-      - run: docker-compose up
+      - run: docker-compose up -d
       - run: npm test --prefix ./src
