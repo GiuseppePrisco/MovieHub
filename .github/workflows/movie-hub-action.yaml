@@ -6,14 +6,30 @@ jobs:
   CI-CD:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: docker-compose up -d --build
-      - uses: actions/setup-node@v2
-      - run: npm install -g mocha
-      - run: npm install --prefix ./src
-      # - run: docker-compose up -d --build
-      # - uses: jakejarvis/wait-action@master
-      #   with:
-      #     time: '180s'
-      - run: npm test --prefix ./src
-      - run: docker-compose down
+      # Step 1
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Step 2
+      - name: Start containers 
+        run: docker-compose up -d --build
+
+      # Step 3
+      - name: Install node
+        uses: actions/setup-node@v2
+
+      # Step 4
+      - name: Install mocha
+        run: npm install -g mocha
+
+      # Step 5
+      - name: Install dependencies 
+        run: npm install --prefix ./src
+  
+      # Step 6
+      - name: Run Test
+        run: npm test --prefix ./src
+
+      # Step 7
+      - name: Stop containers
+        run: docker-compose down
