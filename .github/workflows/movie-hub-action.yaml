@@ -12,7 +12,7 @@ jobs:
 
       # Step 2
       # - name: Start containers 
-      #   run: docker-compose up -d 
+      #   run: docker-compose up -d --build
 
       # Step 3
       - name: Install node
