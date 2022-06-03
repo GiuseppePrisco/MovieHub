@@ -60,7 +60,7 @@ Link API usate:
 
 
 ### Schema
-![Schema]("inserire il link dello schema")
+![Schema](./src/views/images/schema%20reti.png)
 
 ## Istruzioni per l'installazione
 <ins>WINDOWS</ins>: Installare Docker Desktop cliccando su https://www.docker.com/products/docker-desktop e NodeJS su https://nodejs.org/it/download.
