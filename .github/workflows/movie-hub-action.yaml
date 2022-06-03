@@ -4,10 +4,11 @@ on:
     branches: [ main ]
 jobs:
   CI-CD:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
       - run: npm install -g mocha
       - run: npm install --prefix ./src
+      - run: docker-compose up
       - run: npm test --prefix ./src
