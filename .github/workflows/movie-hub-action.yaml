@@ -12,7 +12,7 @@ jobs:
 
       # Step 2
       # - name: Start containers 
-      #   run: docker-compose up -d 
+      #   run: docker-compose up -d --build
 
       # Step 3
       - name: Install node
@@ -27,7 +27,7 @@ jobs:
         run: npm install --prefix ./src
 
       - name: Start containers 
-        run: docker-compose up -d --build
+        run: docker-compose up -d 
 
       # Step 6
       - name: Run Test
