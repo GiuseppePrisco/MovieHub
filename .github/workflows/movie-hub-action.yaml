@@ -10,4 +10,4 @@ jobs:
       - uses: actions/setup-node@v2
       - run: npm install -g mocha
       - run: npm install --prefix ./src
-      - run: npm test
+      - run: npm test --prefix ./src
