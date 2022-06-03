@@ -971,6 +971,37 @@ app.get('/topMovie', function(req, res){
 /* ************************************ FINE NETFLIX TOP 10 ********************************************* */
 
 
+/* ************************************ REST API ********************************************* */
+
+//restituisce la lista dei film preferiti di un utente tramite id
+app.get('/api/user/:id', function(req,res){
+  var id= req.params.id;
+  request({
+    url: 'http://admin:admin@couchdb:5984/users/'+id.toString(),
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json;charset=UTF-8'
+    },
+  }, function(error, response, body){
+    if (error){
+      res.status(500).send({success:false, message:'Internal server error'});
+    }
+    else{
+      if (body!=undefined){
+        var info_utente = JSON.parse(body);
+        var lista_preferiti = info_utente.my_list;
+        res.status(200).send({success: true, id: id, list: lista_preferiti});
+      }
+      else{
+        res.status(404).send({success:false, error: 'Id not found.'});
+      }
+    }
+  })
+});
+
+
+/* ************************************ FINE REST API ********************************************* */
+
 /* ********************************* DEFINIZIONE DELLA PORTA ****************************************** */
 
 app.use(function(req, res, next){
