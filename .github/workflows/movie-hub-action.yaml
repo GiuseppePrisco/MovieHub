@@ -7,11 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: docker-compose up -d --build
       - uses: actions/setup-node@v2
       - run: npm install -g mocha
       - run: npm install --prefix ./src
-      - run: docker-compose up -d
-      - uses: jakejarvis/wait-action@master
-        with:
-          time: '180s'
+      # - run: docker-compose up -d --build
+      # - uses: jakejarvis/wait-action@master
+      #   with:
+      #     time: '180s'
       - run: npm test --prefix ./src
+      - run: docker-compose down
