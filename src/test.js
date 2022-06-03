@@ -36,7 +36,7 @@ describe("Test if REST API for getting the top ten movies on Netflix", function(
     it("should return 200", function(done) {
         axios.get('https://localhost:3000/topMovie', {httpsAgent: agent}).then(function(response) {
 			response.status.should.equal(200);
-		    done()
+			done();
 		}).catch(function(error) {
 			done(error);
 		});
