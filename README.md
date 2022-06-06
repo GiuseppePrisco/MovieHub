@@ -3,48 +3,49 @@ Progetto svolto per il corso di Reti di Calcolatori 2021/22
 Membri del gruppo: Elena Bianchini (matricola 1796906), Simona Lai (matricola 1841636), Giuseppe Prisco (matricola 1895709)
 
 ## Scopo del progetto
-La nostra Web App **MovieHub** intende fornire all'utente in modo semplice e intuitivo un tramite per ricevere informazioni dettagliate sui film. Inoltre si possono ricevere notizie sui film più visti su Netflix oppure interagire con la nostra chat-bot per farsi suggerire un film di un determinato genere. L'utente può inoltre iscriversi al nostro sito con google per usufruire di ulteriori funzionalità quali l'aggiunta di un film ai preferiti visibili dal proprio profilo oppure l'inserimento nel proprio calendar di un reminder per guardare un film.
+La nostra Web App **MovieHub** intende fornire all'utente in modo semplice e intuitivo un tramite per ricevere informazioni dettagliate sui film. L’applicazione dà la possibilità di cercare il film di interesse a partire dal titolo, di conoscere i dieci più visti su Netflix e di interagire con una chat-bot in grado di suggerire cosa guardare una volta fornito il genere desiderato. Inoltre l’utente può iscriversi all’applicazione, attraverso un account Google, per usufruire di ulteriori funzionalità quali l’aggiunta di film ad una lista di preferiti oppure l’inserimento di un evento che ricordi il giorno in cui si desidera vedere un certo film sul proprio Google Calendar.
 
 ## Architettura di riferimento e tecnologie usate
 
 ### Requisiti di progetto
-- [x] 1. Il servizio REST che implementate (lo chiameremo SERV) deve offrire a terze parti delle API documentate;
-- [x] 2. SERV si deve interfacciare con almeno due servizi REST di terze parti (e.g. google maps);
-- [x] 3. Almeno uno dei servizi REST esterni deve essere “commerciale” (es: twitter, google, facebook, pubnub,  parse, firbase etc);
-- [x] 4. Almeno uno dei servizi REST esterni deve richiedere oauth (e.g. google calendar), Non è sufficiente usare oauth solo per verificare le credenziali è necessario accedere al servizio;
-- [x] 5. La soluzione deve prevedere l'uso di protocolli asincroni. Per esempio Websocket e/o AMQP (o simili es MQTT);
+- [x] 1. Il servizio REST che implementate (SERV) deve offrire a terze parti delle API documentate;
+- [x] 2. SERV si deve interfacciare con almeno due servizi REST di terze parti;
+- [x] 3. Almeno uno dei servizi REST esterni deve essere “commerciale”;
+- [x] 4. Almeno uno dei servizi REST esterni deve richiedere oauth;
+- [x] 5. La soluzione deve prevedere l'uso di protocolli asincroni;
 - [x] 6. Il progetto deve prevedere l'uso di Docker e l'automazione del processo di lancio, configurazione e test;
-- [x] 7. Il progetto deve essere su GIT (GITHUB, GITLAB ...) e documentato don un README che illustri almeno 
-    - 1. scopo del progetto
-    - 2. architettura di riferimento e tecnologie usate (con un diagramma)
-    - 3. chiare indicazioni sul soddisfacimento dei requisiti
-    - 4. istruzioni per l'installazione
-    - 5. istruzioni per il test
-    - 6. Documentazione delle API fornite per esempio con APIDOC
-- [x] 8. Deve essere implementata una forma di CI/CD per esempio con le Github Actions;
-- [x] 9. Requisiti minimi di sicurezza devono essere considerati e documentati. Self-signed certificate sono più che sufficienti per gli scopi del progetto.
+- [x] 7. Il progetto deve essere su GIT (GITHUB, GITLAB ...) e documentato con un README; 
+- [x] 8. Deve essere implementata una forma di CI/CD;
+- [x] 9. Requisiti minimi di sicurezza devono essere considerati e documentati.
 
 ### Tecnologie utilizzate
+Requisito 1:
 - Apidoc: utilizzato per fornire API documentate;
-  - Soddisfa il requisito n°1;
+
+Requisito 2:
 - TMDB API: utilizzate per ottenere varie informazioni sui film cercati dall'utente;
 - Netflix API: utilizzate per ottenere la top 10 dei film più guardati su Netflix;
-  - Le 2 API sopra citate soddisfano il requisito n°2.
+
+Requisiti 3 e 4:
 - Google: utilizzato per accedere al sito web tramite il protocollo Oauth;
-  - Soddisfa il requisito n°3 e 4.
 - Google Calendar: utilizzato per creare/aggiungere eventi al proprio calendario (tramite accesso Oauth);
-  - Soddisfa il requisito n°3 e 4.
+
+Requisito 5:
 - Websocket: utilizzata per implementare la chat-bot con cui un utente può interagire;
-  - Soddisfa il requisito n°5.
+
+Requisito 6: 
 - Docker: utilizzato per la creazione della Web App su più container e per l'automazione del processo di lancio;
-  - Soddisfa il requisito n°6.
+
+Requisito 7:
 - README.md: utilizzato per illustrare i punti fondamentali del progetto (scopo del progetto, tecnologie utilizzate ecc.);
 - GitHub: utilizzato per condividere i file e permettere al gruppo di lavorare allo stesso progetto contemporaneamente;
-  - Le 2 tecnologie sopra citate soddisfano il requisito n°7.
+
+Requisito 8: 
 - GitHub Actions: utilizzate per implementare una forma di CI/CD ed effettuare i test ogni qual volta viene svolta una push;
-  - Soddisfa il requisito n°8.
+
+Requisito 9:
 - Self-signed Certificate: utilizzati per ottenere una connessione sicura basata su https;
-  - Soddisfa il requisito n°9.
+
 
 #### Altre tecnologie utilizzate
 - CouchDB: utilizzato per il Data storage degli utenti;
