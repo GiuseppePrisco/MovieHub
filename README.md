@@ -1,5 +1,6 @@
 # MovieHub
-Progetto svolto per il corso di Reti di Calcolatori 2021/22
+Progetto svolto per il corso di Reti di Calcolatori 2021/22.
+
 Membri del gruppo: Elena Bianchini (matricola 1796906), Simona Lai (matricola 1841636), Giuseppe Prisco (matricola 1895709)
 
 ## Scopo del progetto
@@ -57,20 +58,30 @@ Link API usate:
 ![Schema](./src/views/images/schema%20reti.png)
 
 ## Istruzioni per l'installazione
-<ins>WINDOWS</ins>: Installare Docker Desktop cliccando su https://www.docker.com/products/docker-desktop e NodeJS su https://nodejs.org/it/download.
+<ins>WINDOWS e macOS</ins>: Installare Docker Desktop cliccando su https://www.docker.com/products/docker-desktop e NodeJS su https://nodejs.org/it/download.
 
-<ins>UBUNTU</ins>: Aprire un terminale ed eseguire sudo apt install nodejs, sudo apt install docker e sudo apt install docker-compose.
+<ins>UBUNTU</ins>: Aprire un terminale ed eseguire:
+```
+$ sudo apt install nodejs
+$ sudo apt install docker 
+$ sudo apt install docker-compose
+```
 
-Una volta completati questi passaggi possiamo passare alla configurazione del servizio **MovieHub** (si assume che sia stato installato Git):
+Una volta completati questi passaggi possiamo passare alla configurazione del servizio **MovieHub** (si assume che sia stato installato Git).
+
 Apriamo il terminale, rechiamoci nella directory in cui vogliamo clonare la repo ed eseguiamo i seguenti comandi:
 ```
 $ git clone https://github.com/GiuseppePrisco/MovieHub.git
 $ cd /MovieHub
 $ sudo docker-compose up -d --build
 ```
-A questo punto, eseguendo sudo docker ps, dovremmo visualizzare la lista dei nostri 2 container (moviehub_nodejs, e couchdb).
+A questo punto, eseguendo
+```
+$ sudo docker ps
+```
+dovremmo visualizzare la lista dei nostri 2 container (moviehub_nodejs, e couchdb).
 
-Se il db users non è ancora stato inserito in couchdb, inserirlo utilizzando la GUI al sito http://127.0.0.1:5984/_utils (loggarsi con user: admin, pass: admin), oppure eseguire il tutto da terminale:
+Se il db users non è ancora stato inserito in CouchDB, inserirlo utilizzando la GUI al sito http://127.0.0.1:5984/_utils (loggarsi con user: admin, pass: admin), oppure eseguire il tutto da terminale:
 ```
 $ sudo docker container ps  //selezionare l'id del container di couchdb
 $ sudo docker exec -it <container-name> /bin/bash
@@ -89,9 +100,9 @@ $ sudo docker-compose down --remove
 ```
 
 ## Istruzioni per il test
-Per effettuare il test:
+Per effettuare il test automatico:
 
-Come prima cosa spostarsi nella cartella /src:
+Come prima cosa spostarsi nella cartella src:
 ```
 $ cd src/
 ```
@@ -108,5 +119,5 @@ $ mocha
 ## Documentazione delle API
 La documentazione delle API fornite dalla nostra Web App è disponibile nel file index.html seguendo il percorso:
 ```
-$ /src/apidoc/index.html
+$ open /src/apidoc/index.html
 ```
