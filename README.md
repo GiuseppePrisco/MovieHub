@@ -19,32 +19,25 @@ La nostra Web App **MovieHub** intende fornire all'utente in modo semplice e int
 - [x] 9. Requisiti minimi di sicurezza devono essere considerati e documentati.
 
 ### Tecnologie utilizzate
-Requisito 1:
-- Apidoc: utilizzato per fornire API documentate;
-
-Requisito 2:
-- TMDB API: utilizzate per ottenere varie informazioni sui film cercati dall'utente;
-- Netflix API: utilizzate per ottenere la top 10 dei film più guardati su Netflix;
-
-Requisiti 3 e 4:
-- Google: utilizzato per accedere al sito web tramite il protocollo Oauth;
-- Google Calendar: utilizzato per creare/aggiungere eventi al proprio calendario (tramite accesso Oauth);
-
-Requisito 5:
-- Websocket: utilizzata per implementare la chat-bot con cui un utente può interagire;
-
-Requisito 6: 
-- Docker: utilizzato per la creazione della Web App su più container e per l'automazione del processo di lancio;
-
-Requisito 7:
-- README.md: utilizzato per illustrare i punti fondamentali del progetto (scopo del progetto, tecnologie utilizzate ecc.);
-- GitHub: utilizzato per condividere i file e permettere al gruppo di lavorare allo stesso progetto contemporaneamente;
-
-Requisito 8: 
-- GitHub Actions: utilizzate per implementare una forma di CI/CD ed effettuare i test ogni qual volta viene svolta una push;
-
-Requisito 9:
-- Self-signed Certificate: utilizzati per ottenere una connessione sicura basata su https;
+- Requisito 1:
+	- Apidoc: utilizzato per fornire API documentate;
+- Requisito 2:
+	- TMDB API: utilizzate per ottenere varie informazioni sui film cercati dall'utente;
+	- Netflix API: utilizzate per ottenere la top 10 dei film più guardati su Netflix;
+- Requisiti 3 e 4:
+	- Google: utilizzato per accedere al sito web tramite il protocollo Oauth;
+	- Google Calendar: utilizzato per creare/aggiungere eventi al proprio calendario (tramite accesso Oauth);
+- Requisito 5:
+	- Websocket: utilizzata per implementare la chat-bot con cui un utente può interagire;
+- Requisito 6: 
+	- Docker: utilizzato per la creazione della Web App su più container e per l'automazione del processo di lancio;
+- Requisito 7:
+	- README.md: utilizzato per illustrare i punti fondamentali del progetto (scopo del progetto, tecnologie utilizzate ecc.);
+	- GitHub: utilizzato per condividere i file e permettere al gruppo di lavorare allo stesso progetto contemporaneamente;
+- Requisito 8: 
+	- GitHub Actions: utilizzate per implementare una forma di CI/CD ed effettuare i test ogni qual volta viene svolta una push;
+- Requisito 9:
+	- Self-signed Certificate: utilizzati per ottenere una connessione sicura basata su https;
 
 
 #### Altre tecnologie utilizzate
