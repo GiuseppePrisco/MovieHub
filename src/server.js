@@ -1063,6 +1063,37 @@ app.get('/api/recommended/:genre', function(req,res){
 });
 
 
+app.get("/api/topten", function(req, res){
+  const options = {
+    method: 'GET',
+    url: 'https://netflix-weekly-top-10.p.rapidapi.com/api/movie',
+    headers: {
+      'X-RapidAPI-Host': 'netflix-weekly-top-10.p.rapidapi.com',
+      'X-RapidAPI-Key': process.env.NETFLIX_KEY
+    }
+  };
+
+  request.get(options, function(error, response, body){
+    if (error){
+      res.status(500).send({success:false, message:'Internal server error'});
+    }
+    else{
+      var info = JSON.parse(body);
+      if (info.error!=undefined){
+        res.status(500).send({success:false, message:'Internal server error'});
+      }
+      else{
+        const list =[];
+        for (var i=0; i<info.length;i++){
+          var result = {list: i+1, name: info[i].name};
+          list.push(result);
+        }
+        res.status(200).send({success: true, recommended: list});
+      }
+    }
+  });
+});
+
 /* ************************************ FINE REST API ********************************************* */
 
 /* ********************************* DEFINIZIONE DELLA PORTA ****************************************** */
