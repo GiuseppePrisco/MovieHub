@@ -22,3 +22,25 @@
  *    }
  *
  */
+/**
+ * @api {get} /api/recommended/:genre Recommend a movie based on genre
+ * @apiName GetRecommendedMovie
+ * @apiGroup Movies
+ *
+ * @apiParam {String} genre Genre.
+ * @apiSuccess {String} recommended Recommended movie title.
+ *
+ * @apiSuccessExample Success-Response:
+ *    HTTP/1.1 200 OK
+ *    {
+ *         "recommended": ["Titanic"],
+ *    }
+ *
+ * @apiError error Id not found.
+ * @apiErrorExample Error-Response:
+ *    HTTP/1.1 404 Not found
+ *    {
+ *        "error": "Genre not found"
+ *    }
+ *
+ */

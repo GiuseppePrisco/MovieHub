@@ -999,6 +999,69 @@ app.get('/api/user/:id', function(req,res){
   })
 });
 
+//restituisce un film consigliato in base al genere
+app.get('/api/recommended/:genre', function(req,res){
+  var lista;
+  var suggerito;
+  var genre_id;
+  var genre=req.params.genre.toString();
+  genre=genre[0].toUpperCase()+genre.slice(1).toLowerCase();
+  var option = {
+    url: 'https://api.themoviedb.org/3/genre/movie/list?api_key='+process.env.FILM_KEY+'&language=it-IT', 
+  }
+    
+  request.get(option,function(error, response, body){
+    if(error) {
+      res.status(500).send({success:false, message:'Internal server error'});
+    } 
+    else {
+      if (response.statusCode == 200) {
+        lista = JSON.parse(body).genres;
+        console.log(lista);
+        console.log(genre);
+        var trovato=0;
+        // cerco l'id del genere per le richiesta successiva
+        for (var i=0; i<lista.length; i++){
+          if (genre == lista[i].name){
+            console.log("qui");
+            trovato=1;
+            genre_id=lista[i].id
+            break;
+          }
+        }
+
+        // Se il dato inserito non è corretto 
+        if (!trovato){
+          res.status(404).send({success:false, error: 'Genre not found'});
+        }
+
+        else{
+          // richiesta del film secondo dall'id del genere
+          option = {
+            url: 'https://api.themoviedb.org/3/discover/movie?api_key='+process.env.FILM_KEY+'&language=it-IT&sort_by=popularity.desc&with_genres='+genre_id, // rendere segreta la chiave 
+          }
+    
+          request.get(option,function(error, response, body){
+            if(error) {
+              res.status(500).send({success:false, message:'Internal server error'});
+            } else {
+              if (response.statusCode == 200) {
+                var info = JSON.parse(body);
+                i = Math.round(Math.random()*2); // numero casuale tra 0 e 2 (primi 3 film)
+                suggerito = info.results[i].title;
+                res.status(200).send({success: true, recommended: suggerito});
+              }
+            }
+          });
+        }
+      }
+      else{
+        res.status(500).send({success:false, message:'Internal server error'});
+      }
+    }
+  });
+});
+
 
 /* ************************************ FINE REST API ********************************************* */
 
