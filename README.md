@@ -4,7 +4,7 @@ Progetto svolto per il corso di Reti di Calcolatori 2021/22.
 Membri del gruppo: Elena Bianchini (matricola 1796906), Simona Lai (matricola 1841636), Giuseppe Prisco (matricola 1895709)
 
 ## Scopo del progetto
-La nostra Web App **MovieHub** intende fornire all'utente in modo semplice e intuitivo un tramite per ricevere informazioni dettagliate sui film. L’applicazione dà la possibilità di cercare il film di interesse a partire dal titolo, di conoscere i dieci più visti su Netflix e di interagire con una chat-bot in grado di suggerire cosa guardare una volta fornito il genere desiderato. Inoltre l’utente può iscriversi all’applicazione, attraverso un account Google, per usufruire di ulteriori funzionalità quali l’aggiunta di film ad una lista di preferiti oppure l’inserimento di un evento che ricordi il giorno in cui si desidera vedere un certo film sul proprio Google Calendar.
+La nostra Web App **MovieHub** intende fornire all'utente, in modo semplice e intuitivo, un tramite per ricevere informazioni dettagliate sui film. L’applicazione dà la possibilità di cercare il film di interesse a partire dal titolo, di conoscere i dieci più visti su Netflix e di interagire con una chat-bot in grado di suggerire cosa guardare una volta fornito il genere desiderato. Inoltre l’utente può iscriversi all’applicazione, attraverso un account Google, per usufruire di ulteriori funzionalità quali l’aggiunta di film ad una lista di preferiti oppure l’inserimento di un evento che ricordi il giorno in cui si desidera vedere un certo film sul proprio Google Calendar.
 
 ## Architettura di riferimento e tecnologie usate
 
