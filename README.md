@@ -42,7 +42,7 @@ La nostra Web App **MovieHub** intende fornire all'utente in modo semplice e int
 
 #### Altre tecnologie utilizzate
 - CouchDB: utilizzato per il Data storage degli utenti;
-- Node.Js: utilizzato ger gestire il back-end della Web App;
+- Node.js: utilizzato ger gestire il back-end della Web App;
 - ejs: utilizzato come template per le pagine web;
 - css: utilizzato per i fogli di stile per il front-end;
 - Express.js: utilizzato come framework per la Web App;
@@ -91,7 +91,11 @@ $ sudo docker-compose down --remove
 ## Istruzioni per il test
 Per effettuare il test:
 
-Come prima cosa installare mocha:
+Come prima cosa spostarsi nella cartella /src:
+```
+$ cd src/
+```
+Poi installare mocha:
 
 ```
 $ sudo npm install -g mocha
@@ -102,4 +106,7 @@ $ mocha
 ```
 
 ## Documentazione delle API
-La documentazione delle API fornite dalla nostra Web App è disponibile nel file index.html seguendo il percorso /src/apidoc/index.html
+La documentazione delle API fornite dalla nostra Web App è disponibile nel file index.html seguendo il percorso:
+```
+$ /src/apidoc/index.html
+```
