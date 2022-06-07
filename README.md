@@ -113,7 +113,7 @@ $ sudo npm install -g mocha
 ```
 Dopodiché eseguire:
 ```
-$ mocha
+$ npm test
 ```
 
 ## Documentazione delle API
