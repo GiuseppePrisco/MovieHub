@@ -118,6 +118,11 @@ $ npm test
 
 ## Documentazione delle API
 La documentazione delle API fornite dalla nostra Web App è disponibile nel file index.html seguendo il percorso:
+<ins>macOS</ins>
 ```
-$ open /src/apidoc/index.html
+$ open ./src/apidoc/index.html
+```
+<ins>Windows</ins>
+```
+$ start ./src/apidoc/index.html
 ```
