@@ -26,7 +26,7 @@ jobs:
 
       # Step 5
       - name: Install mocha
-        run: npm install -g mocha
+        run: npm install -g mocha --prefix ./src
 
       # Step 6
       - name: Install dependencies 
